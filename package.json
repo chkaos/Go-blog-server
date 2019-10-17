@@ -1,0 +1,30 @@
+{
+  "name": "go-blog-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elvisz2016/Go-blog-server.git"
+  },
+  "keywords": [
+    "Astella"
+  ],
+  "author": "Astella",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/elvisz2016/Go-blog-server/issues"
+  },
+  "homepage": "https://github.com/elvisz2016/Go-blog-server#readme",
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
