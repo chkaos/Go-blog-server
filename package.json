@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elvisz2016/Go-blog-server.git"
+    "url": "git+https://Go-blog-server.git"
   },
   "keywords": [
     "Astella"
@@ -16,9 +16,9 @@
   "author": "Astella",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/elvisz2016/Go-blog-server/issues"
+    "url": "https://Go-blog-server/issues"
   },
-  "homepage": "https://github.com/elvisz2016/Go-blog-server#readme",
+  "homepage": "https://Go-blog-server#readme",
   "devDependencies": {
     "cz-conventional-changelog": "^3.0.2"
   },
