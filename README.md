@@ -41,3 +41,7 @@ https://blog.csdn.net/weixin_43671322/article/details/89537182
  项目结构优化
  提示信息前缀（添加，修改。。。）
  提取重复代码
+ 获取项目配置方法优化
+
+ 项目参考
+ https://segmentfault.com/a/1190000013297705

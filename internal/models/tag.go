@@ -5,11 +5,11 @@ import "fmt"
 type Tag struct {
 	Model
 
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Icon        string `json:"icon"`
-	ArticleNum  int    `json:"article_num"`
-	State       int    `json:"state"`
+	Name       string `json:"name"`
+	Desc       string `json:"desc"`
+	Icon       string `json:"icon"`
+	ArticleNum int    `json:"article_num"`
+	State      int    `json:"state"`
 }
 
 func GetTags(maps interface{}) (tags []Tag) {
@@ -25,10 +25,10 @@ func GetTagTotal(maps interface{}) (count int) {
 	return
 }
 
-func AddTag(name string, description string) bool {
+func AddTag(name string, desc string) bool {
 	db.Create(&Tag{
-		Name:        name,
-		Description: description,
+		Name: name,
+		Desc: desc,
 	})
 
 	return true
