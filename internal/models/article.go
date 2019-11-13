@@ -1,19 +1,22 @@
 package models
 
-// import (
-//     "github.com/jinzhu/gorm"
-// )
-
 type Article struct {
 	Model
 
-	TagID int `json:"tag_id" gorm:"index"`
-	Tag   Tag `json:"tag"`
-
+	CategoryID int `json:"category_id"`
+    Tags   []Tag `gorm:"many2many:tag;"`
 	Title   string `json:"title"`
 	Desc    string `json:"desc"`
+	Keywords    string `json:"keywords"`
 	Content string `json:"content"`
+	RenderedContent string `json:"rendered_content"`
+	Thumb string `json:"thumb"`
+	Source int `json:"source"`
+	ReproduceURL string `json:"reproduce_url"`
 	State   int    `json:"state"`
+	Likenum   int    `json:"like_num"`
+	Commentsnum   int    `json:"comments_num"`
+	Pvsnum   int    `json:"pvs_num"`
 }
 
 func ExistArticleByID(id int) bool {
@@ -41,7 +44,6 @@ func GetArticles(pageNum int, pageSize int, maps interface{}) (articles []Articl
 
 func GetArticle(id int) (article Article) {
 	db.Where("id = ?", id).First(&article)
-	db.Model(&article).Related(&article.Tag)
 
 	return
 }
@@ -54,10 +56,15 @@ func EditArticle(id int, data interface{}) bool {
 
 func AddArticle(data map[string]interface{}) bool {
 	db.Create(&Article{
-		TagID:   data["tag_id"].(int),
+		CategoryID:   data["category_id"].(int),
 		Title:   data["title"].(string),
 		Desc:    data["desc"].(string),
 		Content: data["content"].(string),
+		Keywords: data["keywords"].(string),
+		RenderedContent: data["RenderedContent"].(string),
+		Thumb: data["thumb"].(string),
+		Source: data["source"].(int),
+		ReproduceURL: data["reproduce_url"].(string),
 		State:   data["state"].(int),
 	})
 

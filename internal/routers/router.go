@@ -28,11 +28,11 @@ func InitRouter() *gin.Engine {
 		apiv1.PUT("/category/:id", v1.EditCategory)
 		apiv1.DELETE("/category/:id", v1.DeleteCategory)
 
-		// apiv1.GET("/articles", v1.GetArticles)
-		// apiv1.GET("/articles/:id", v1.GetArticle)
-		// apiv1.POST("/articles", v1.AddArticle)
-		// apiv1.PUT("/articles/:id", v1.EditArticle)
-		// apiv1.DELETE("/articles/:id", v1.DeleteArticle)
+		apiv1.GET("/articles", v1.GetArticles)
+		apiv1.GET("/articles/:id", v1.GetArticle)
+		apiv1.POST("/articles", v1.AddArticle)
+		apiv1.PUT("/articles/:id", v1.EditArticle)
+		apiv1.DELETE("/articles/:id", v1.DeleteArticle)
 	}
 
 	return r

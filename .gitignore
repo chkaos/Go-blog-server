@@ -1,9 +1,9 @@
 private.pem
 *.private.*
+mirgates
 
-
-# 项目依赖
-node_modules
+# dependencies
+**/node_modules
 vendor
 
 .exe

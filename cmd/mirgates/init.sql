@@ -11,8 +11,6 @@ CREATE TABLE `tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章标签管理';
 
 
-INSERT INTO `tag` (`name`, `icon`, `description`) VALUES ('vue', 'icon-vue', 'Vue (读音 /vjuː/，类似于 view) 是一套用于构建用户界面的渐进式框架');
-
 CREATE TABLE `category` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT '' COMMENT '文章分类名称',
@@ -21,8 +19,6 @@ CREATE TABLE `category` (
   `modified_on` int(10) unsigned DEFAULT 0 COMMENT '修改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章分类管理';
-
-INSERT INTO `category` (`name`, `desc`) VALUES ('code', '代码');
 
 CREATE TABLE `article` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -45,12 +41,48 @@ CREATE TABLE `article` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章管理';
 
+CREATE TABLE `mapping-article-tag` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `article_id` int(10) NOT NULL COMMENT '文章id',
+  `tag_id` int(10) NOT NULL COMMENT '标签id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章标签映射表';
 
 CREATE TABLE `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) DEFAULT '' COMMENT '账号',
-  `password` varchar(50) DEFAULT '' COMMENT '密码',
+  `name` varchar(50) NOT NULL COMMENT '昵称',
+  `password` varchar(50) NOT NULL COMMENT '密码',
+  `url` varchar(100) DEFAULT '' COMMENT '个人网站链接',
+  `avatar` varchar(100) DEFAULT '' COMMENT '缩略图链接',
+  `role` tinyint(3) unsigned DEFAULT 0 COMMENT '状态 0普通群组 | 1管理员 ',
+  `source` tinyint(3) unsigned DEFAULT 0 COMMENT '状态 0主站 | 1Github | 2wechat | 3qq',
+  `is_muted` tinyint(3) unsigned DEFAULT 0 COMMENT '状态 0为正常 1为禁言',
+  `created_on` int(10) DEFAULT NULL,
+  `modified_on` int(10) unsigned DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户管理';
 
-INSERT INTO `blog`.`blog_auth` (`id`, `username`, `password`) VALUES (null, 'test', 'test123456');
+CREATE TABLE `comment` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL COMMENT '用户id',
+  `content` text,
+  `created_on` int(10) unsigned DEFAULT 0 COMMENT '发表时间',
+  `likes_num` int(10) unsigned DEFAULT 0 COMMENT '点赞数',
+  `state` tinyint(3) DEFAULT 0 COMMENT '-2 垃圾评论 | -1 隐藏 | 0 待审核 | 1 通过',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评论管理';
+
+CREATE TABLE `comment-parent-child` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(10) NOT NULL COMMENT '父评论id',
+  `child_id` int(10) NOT NULL COMMENT '子评论id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评论父子表';
+
+INSERT INTO `tag` (`name`, `icon`, `desc`) VALUES ('vue', 'icon-vue', 'Vue (读音 /vjuː/，类似于 view) 是一套用于构建用户界面的渐进式框架'), ('react', 'icon-react', '用于构建用户界面的JavaScript库');
+INSERT INTO `category` (`name`, `desc`) VALUES ('code', '代码'), ('lefe', '生活');
+INSERT INTO `article` (`category_id`, `title`, `desc`, `keywords`, `content`, `rendered_content`) VALUES (1, '测试文章', '这是一篇测试文章', '额。。', '渲染前的内容啊', '<div>选然后的内容额</div>');
+INSERT INTO `mapping-article-tag` (`article_id`, `tag_id`) VALUES (1, 1), (1, 2);
+INSERT INTO `comment` (`uid`, `content`, `likes_num`, `state`) VALUES (1, '测试评论1', 3, 1), (1, '测试评论2', 0, 1), (1, '测试评论3', 0, 1);
+INSERT INTO `comment-parent-child` (`parent_id`, `child_id`) VALUES (1, 2), (1, 3);
+INSERT INTO `user` (`name`, `password`, `role`) VALUES ('admin', 'admin', 1);

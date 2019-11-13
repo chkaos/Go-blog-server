@@ -12,7 +12,7 @@ import (
 	"Go-blog-server/pkg/e"
 )
 
-//获取多个文章标签
+//获取多个文章分类
 func GetCategorys(c *gin.Context) {
 	fmt.Println(c)
 	name := c.Query("name")
@@ -39,7 +39,7 @@ func GetCategorys(c *gin.Context) {
 //新增文章标签
 func AddCategory(c *gin.Context) {
 	name := c.Query("name")
-	description := c.Query("description")
+	desc := c.Query("desc")
 
 	valid := validation.Validation{}
 	valid.Required(name, "name").Message("名称不能为空")
@@ -49,7 +49,7 @@ func AddCategory(c *gin.Context) {
 	if !valid.HasErrors() {
 		if !models.ExistCategoryByName(name) {
 			code = e.SUCCESS
-			models.AddCategory(name, description)
+			models.AddCategory(name, desc)
 		} else {
 			code = e.ERROR_EXIST_CATEGORY
 		}
