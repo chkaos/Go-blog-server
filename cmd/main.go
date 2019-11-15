@@ -14,6 +14,10 @@ import (
 	"Go-blog-server/pkg/setting"
 )
 
+// @title Swagger Astella API
+// @version 1.0
+// @description This is a sample server celler server.
+
 func main() {
 	router := routers.InitRouter()
 

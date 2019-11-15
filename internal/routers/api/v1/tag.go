@@ -12,7 +12,12 @@ import (
 	"Go-blog-server/pkg/e"
 )
 
-//获取多个文章标签
+// @Summary Get tags
+// @Produce json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/tag [get]
+
 func GetTags(c *gin.Context) {
 	name := c.Query("name")
 	// pageNum := c.Query("pageNum")
@@ -43,7 +48,14 @@ func GetTags(c *gin.Context) {
 	})
 }
 
-//新增文章标签
+// @Summary Add tag
+// @Produce  json
+// @Param name body string true "Name"
+// @Param desc body string true "Desc"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/tag [put]
+
 func AddTag(c *gin.Context) {
 	name := c.PostForm("name")
 	desc := c.PostForm("desc")
@@ -69,6 +81,14 @@ func AddTag(c *gin.Context) {
 	})
 }
 
+// @Summary Edit tag
+// @Produce  json
+// @Param id path int true "ID"
+// @Param name body string false "Name"
+// @Param desc body string false "Desc"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/tag [put]
 func EditTag(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 	name := c.Query("name")
@@ -109,7 +129,13 @@ func EditTag(c *gin.Context) {
 	})
 }
 
-//删除文章标签
+// @Summary Delete tag
+// @Produce  json
+// @Param id path int true "ID"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/tag [delete]
+
 func DeleteTag(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 

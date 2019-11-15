@@ -1,0 +1,11 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server celler server.",
+        "title": "Swagger Astella API",
+        "contact": {},
+        "license": {},
+        "version": "1.0"
+    },
+    "paths": {}
+}

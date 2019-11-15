@@ -7,3 +7,7 @@ mirgates
 vendor
 
 .exe
+
+#log
+runtime
+.log

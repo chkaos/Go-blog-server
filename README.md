@@ -45,3 +45,5 @@ https://blog.csdn.net/weixin_43671322/article/details/89537182
 
  项目参考
  https://segmentfault.com/a/1190000013297705
+
+swag init -g ./internal/routers/router.go

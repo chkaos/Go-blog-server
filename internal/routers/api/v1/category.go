@@ -12,7 +12,12 @@ import (
 	"Go-blog-server/pkg/e"
 )
 
-//获取多个文章分类
+// @Summary Get categorys
+// @Produce json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/category [get]
+
 func GetCategorys(c *gin.Context) {
 	fmt.Println(c)
 	name := c.Query("name")
@@ -36,7 +41,14 @@ func GetCategorys(c *gin.Context) {
 	})
 }
 
-//新增文章标签
+// @Summary Add category
+// @Produce  json
+// @Param name body string true "Name"
+// @Param desc body string true "Desc"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/category [post]
+
 func AddCategory(c *gin.Context) {
 	name := c.Query("name")
 	desc := c.Query("desc")
@@ -62,6 +74,14 @@ func AddCategory(c *gin.Context) {
 	})
 }
 
+// @Summary Edit category
+// @Produce  json
+// @Param id path int true "ID"
+// @Param name body string false "Name"
+// @Param desc body string false "Desc"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/category [put]
 func EditCategory(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 	name := c.Query("name")
@@ -93,7 +113,12 @@ func EditCategory(c *gin.Context) {
 	})
 }
 
-//删除文章标签
+// @Summary Delete category
+// @Produce  json
+// @Param id path int true "ID"
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/category [delete]
 func DeleteCategory(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 
