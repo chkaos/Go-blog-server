@@ -50,7 +50,7 @@ CREATE TABLE `mapping-article-tag` (
 
 CREATE TABLE `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL COMMENT '昵称',
+  `username` varchar(50) NOT NULL COMMENT '昵称',
   `password` varchar(50) NOT NULL COMMENT '密码',
   `url` varchar(100) DEFAULT '' COMMENT '个人网站链接',
   `avatar` varchar(100) DEFAULT '' COMMENT '缩略图链接',
@@ -85,4 +85,4 @@ INSERT INTO `article` (`category_id`, `title`, `desc`, `keywords`, `content`, `r
 INSERT INTO `mapping-article-tag` (`article_id`, `tag_id`) VALUES (1, 1), (1, 2);
 INSERT INTO `comment` (`uid`, `content`, `likes_num`, `state`) VALUES (1, '测试评论1', 3, 1), (1, '测试评论2', 0, 1), (1, '测试评论3', 0, 1);
 INSERT INTO `comment-parent-child` (`parent_id`, `child_id`) VALUES (1, 2), (1, 3);
-INSERT INTO `user` (`name`, `password`, `role`) VALUES ('admin', 'admin', 1);
+INSERT INTO `user` (`username`, `password`, `role`) VALUES ('admin', 'admin', 1);

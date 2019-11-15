@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/astaxie/beego v1.12.0
 	github.com/denisenkom/go-mssqldb v0.0.0-20191001013358-cfbb681360f0 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.4.0
 	github.com/go-ini/ini v1.49.0
 	github.com/jinzhu/gorm v1.9.11
