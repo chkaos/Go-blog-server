@@ -2,7 +2,6 @@ package api
 
 import (
     "fmt"
-    "log"
     "net/http"
 
     "github.com/gin-gonic/gin"
@@ -11,6 +10,7 @@ import (
     "Go-blog-server/pkg/e"
     "Go-blog-server/pkg/utils"
     "Go-blog-server/internal/models"
+    "Go-blog-server/pkg/logging"
 )
 
 type user struct {
@@ -46,7 +46,7 @@ func GetAuth(c *gin.Context) {
         }
     } else {
         for _, err := range valid.Errors {
-            log.Println(err.Key, err.Message)
+            logging.Info(err.Key, err.Message)
         }
     }
 
