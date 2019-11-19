@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "go fmt ./...",
-    "precommit-msg": "echo '代码检查中...' && exit 0"
+    "precommit-msg": "echo 'Formating code...' && exit 0"
   },
   "repository": {
     "type": "git",
@@ -22,12 +22,15 @@
   "homepage": "https://Go-blog-server#readme",
   "devDependencies": {
     "cz-conventional-changelog": "^3.0.2",
-    "pre-commit": "^1.2.2"
+    "husky": "^3.1.0",
+    "lint-staged": "^9.4.3"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "pre-commit": [ "precommit-msg", "lint" ]
+  "lint-staged": {
+    "*.go": ["npm run lint", "git add"]
+  }
 }
