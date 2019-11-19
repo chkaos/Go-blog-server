@@ -17,6 +17,7 @@ type Model struct {
 	ID         int `gorm:"primary_key" json:"id"`
 	CreatedOn  int `json:"created_on"`
 	ModifiedOn int `json:"modified_on"`
+	DeletedAt  int `json:"deleted_at"`
 }
 
 func init() {
@@ -57,22 +58,69 @@ func init() {
 	db.DB().SetMaxOpenConns(100)
 
 	// 注册回调
-	db.Callback().Create().Register("my_plugin:before_create", beforeCreate)
-	db.Callback().Update().Before("gorm:update").Register("my_plugin:before_update", beforeUpdate)
+	db.Callback().Create().Replace("gorm:create_time_stamp", updateTimeStampForCreateCallback)
+	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
 }
 
 func CloseDB() {
 	defer db.Close()
 }
 
-func beforeCreate(scope *gorm.Scope) {
-	if scope.HasColumn("created_on") {
-		scope.SetColumn("created_on", time.Now().Unix())
+func updateTimeStampForCreateCallback(scope *gorm.Scope) {
+	if !scope.HasError() {
+		nowTime := time.Now().Unix()
+		if createTimeField, ok := scope.FieldByName("CreatedOn"); ok {
+			if createTimeField.IsBlank {
+				createTimeField.Set(nowTime)
+			}
+		}
+
+		if modifyTimeField, ok := scope.FieldByName("ModifiedOn"); ok {
+			if modifyTimeField.IsBlank {
+				modifyTimeField.Set(nowTime)
+			}
+		}
 	}
 }
 
-func beforeUpdate(scope *gorm.Scope) {
-	if scope.HasColumn("modified_on") {
-		scope.SetColumn("modified_on", time.Now().Unix())
+func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
+	if _, ok := scope.Get("gorm:update_column"); !ok {
+		scope.SetColumn("ModifiedOn", time.Now().Unix())
 	}
 }
+
+// func deleteCallback(scope *gorm.Scope) {
+//     if !scope.HasError() {
+//         var extraOption string
+//         if str, ok := scope.Get("gorm:delete_option"); ok {
+//             extraOption = fmt.Sprint(str)
+//         }
+
+//         deletedOnField, hasDeletedOnField := scope.FieldByName("DeletedOn")
+
+//         if !scope.Search.Unscoped && hasDeletedOnField {
+//             scope.Raw(fmt.Sprintf(
+//                 "UPDATE %v SET %v=%v%v%v",
+//                 scope.QuotedTableName(),
+//                 scope.Quote(deletedOnField.DBName),
+//                 scope.AddToVars(time.Now().Unix()),
+//                 addExtraSpaceIfExist(scope.CombinedConditionSql()),
+//                 addExtraSpaceIfExist(extraOption),
+//             )).Exec()
+//         } else {
+//             scope.Raw(fmt.Sprintf(
+//                 "DELETE FROM %v%v%v",
+//                 scope.QuotedTableName(),
+//                 addExtraSpaceIfExist(scope.CombinedConditionSql()),
+//                 addExtraSpaceIfExist(extraOption),
+//             )).Exec()
+//         }
+//     }
+// }
+
+// func addExtraSpaceIfExist(str string) string {
+//     if str != "" {
+//         return " " + str
+//     }
+//     return ""
+// }

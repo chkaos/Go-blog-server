@@ -3,13 +3,13 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 
+	_ "Go-blog-server/docs"
 	"Go-blog-server/internal/routers/api"
 	"Go-blog-server/internal/routers/api/v1"
 	"Go-blog-server/pkg/setting"
-	_ "Go-blog-server/docs"
 
-	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/files"
+	"github.com/swaggo/gin-swagger"
 )
 
 func InitRouter() *gin.Engine {
@@ -22,7 +22,7 @@ func InitRouter() *gin.Engine {
 	gin.SetMode(setting.RunMode)
 
 	r.POST("/auth", api.GetAuth)
-	
+
 	apiv1 := r.Group("/api/v1")
 	{
 		apiv1.GET("/tags", v1.GetTags)
@@ -42,7 +42,7 @@ func InitRouter() *gin.Engine {
 		apiv1.DELETE("/articles/:id", v1.DeleteArticle)
 	}
 
-	if(setting.RunMode == "debug"){
+	if setting.RunMode == "debug" {
 		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 

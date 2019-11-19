@@ -1,10 +1,10 @@
 package utils
 
 import (
-	"time"
-	jwt "github.com/dgrijalva/jwt-go"
 	"Go-blog-server/pkg/setting"
 	"fmt"
+	jwt "github.com/dgrijalva/jwt-go"
+	"time"
 )
 
 var jwtSecret = []byte(setting.JwtSecret)
@@ -12,7 +12,7 @@ var jwtSecret = []byte(setting.JwtSecret)
 type Claims struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Role int `json:"role"`
+	Role     int    `json:"role"`
 	jwt.StandardClaims
 }
 
@@ -21,13 +21,13 @@ func GenerateToken(username, password string, role int) (string, error) {
 	expireTime := nowTime.Add(48 * time.Hour)
 
 	claims := Claims{
-			username,
-			password,
-			role,
-			jwt.StandardClaims {
-					ExpiresAt : expireTime.Unix(),
-					Issuer : "astella",
-			},
+		username,
+		password,
+		role,
+		jwt.StandardClaims{
+			ExpiresAt: expireTime.Unix(),
+			Issuer:    "astella",
+		},
 	}
 
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -38,13 +38,13 @@ func GenerateToken(username, password string, role int) (string, error) {
 
 func ParseToken(token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-			return jwtSecret, nil
+		return jwtSecret, nil
 	})
 
 	if tokenClaims != nil {
-			if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
-					return claims, nil
-			}
+		if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
+			return claims, nil
+		}
 	}
 
 	return nil, err

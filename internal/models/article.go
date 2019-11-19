@@ -3,20 +3,20 @@ package models
 type Article struct {
 	Model
 
-	CategoryID int `json:"category_id"`
-    Tags   []Tag `gorm:"many2many:tag;"`
-	Title   string `json:"title"`
-	Desc    string `json:"desc"`
-	Keywords    string `json:"keywords"`
-	Content string `json:"content"`
+	CategoryID      int    `json:"category_id"`
+	Tags            []Tag  `gorm:"many2many:tag;"`
+	Title           string `json:"title"`
+	Desc            string `json:"desc"`
+	Keywords        string `json:"keywords"`
+	Content         string `json:"content"`
 	RenderedContent string `json:"rendered_content"`
-	Thumb string `json:"thumb"`
-	Source int `json:"source"`
-	ReproduceURL string `json:"reproduce_url"`
-	State   int    `json:"state"`
-	Likenum   int    `json:"like_num"`
-	Commentsnum   int    `json:"comments_num"`
-	Pvsnum   int    `json:"pvs_num"`
+	Thumb           string `json:"thumb"`
+	Source          int    `json:"source"`
+	ReproduceURL    string `json:"reproduce_url"`
+	State           int    `json:"state"`
+	Likenum         int    `json:"like_num"`
+	Commentsnum     int    `json:"comments_num"`
+	Pvsnum          int    `json:"pvs_num"`
 }
 
 func ExistArticleByID(id int) bool {
@@ -56,16 +56,16 @@ func EditArticle(id int, data interface{}) bool {
 
 func AddArticle(data map[string]interface{}) bool {
 	db.Create(&Article{
-		CategoryID:   data["category_id"].(int),
-		Title:   data["title"].(string),
-		Desc:    data["desc"].(string),
-		Content: data["content"].(string),
-		Keywords: data["keywords"].(string),
+		CategoryID:      data["category_id"].(int),
+		Title:           data["title"].(string),
+		Desc:            data["desc"].(string),
+		Content:         data["content"].(string),
+		Keywords:        data["keywords"].(string),
 		RenderedContent: data["RenderedContent"].(string),
-		Thumb: data["thumb"].(string),
-		Source: data["source"].(int),
-		ReproduceURL: data["reproduce_url"].(string),
-		State:   data["state"].(int),
+		Thumb:           data["thumb"].(string),
+		Source:          data["source"].(int),
+		ReproduceURL:    data["reproduce_url"].(string),
+		State:           data["state"].(int),
 	})
 
 	return true
