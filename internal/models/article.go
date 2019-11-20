@@ -1,5 +1,7 @@
 package models
 
+import "github.com/jinzhu/gorm"
+
 type Article struct {
 	Model
 
@@ -42,10 +44,15 @@ func GetArticles(pageNum int, pageSize int, maps interface{}) (articles []Articl
 	return
 }
 
-func GetArticle(id int) (article Article) {
-	db.Where("id = ?", id).First(&article)
+func GetArticle(id int) (*Article, error) {
+	var article Article
+	err := db.Where("id = ?", id).First(&article).Error
 
-	return
+	if err != nil && err != gorm.ErrRecordNotFound {
+        return nil, err
+    }
+
+	return &article, nil
 }
 
 func EditArticle(id int, data interface{}) bool {

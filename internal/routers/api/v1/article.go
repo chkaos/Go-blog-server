@@ -9,6 +9,8 @@ import (
 	"github.com/unknwon/com"
 
 	"Go-blog-server/internal/models"
+	"Go-blog-server/internal/service"
+	"Go-blog-server/internal/service/article_service"
 	"Go-blog-server/pkg/e"
 	"Go-blog-server/pkg/setting"
 	"Go-blog-server/pkg/utils"
@@ -21,31 +23,36 @@ import (
 // @Failure 500 {object} app.Response
 // @Router /api/v1/articles/{id} [get]
 func GetArticle(c *gin.Context) {
+	appG := service.Gin{c}
 	id := com.StrTo(c.Param("id")).MustInt()
 
 	valid := validation.Validation{}
 	valid.Min(id, 1, "id").Message("ID必须大于0")
 
-	code := e.INVALID_PARAMS
-	var data interface{}
-	if !valid.HasErrors() {
-		if models.ExistArticleByID(id) {
-			data = models.GetArticle(id)
-			code = e.SUCCESS
-		} else {
-			code = e.ERROR_NOT_EXIST_ARTICLE
-		}
-	} else {
-		for _, err := range valid.Errors {
-			log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
-		}
+	if valid.HasErrors() {
+        service.MarkErrors(valid.Errors)
+        appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+        return
 	}
+	
+	articleService := article_service.Article{ID: id}
+	exists, err := articleService.ExistByID()
+    if err != nil {
+        appG.Response(http.StatusOK, e.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
+        return
+	}
+	if !exists {
+        appG.Response(http.StatusOK, e.ERROR_NOT_EXIST_ARTICLE, nil)
+        return
+    }
+	code := e.INVALID_PARAMS
+	article, err := articleService.Get()
+    if err != nil {
+        appG.Response(http.StatusOK, e.ERROR_GET_ARTICLE_FAIL, nil)
+        return
+    }
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
-	})
+    appG.Response(http.StatusOK, e.SUCCESS, article)
 }
 
 // @Summary Get multiple articles
