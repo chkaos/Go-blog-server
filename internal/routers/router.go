@@ -8,6 +8,7 @@ import (
 	"Go-blog-server/internal/routers/api/v1"
 	"Go-blog-server/pkg/setting"
 
+	"Go-blog-server/internal/middleware"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 )
@@ -18,6 +19,8 @@ func InitRouter() *gin.Engine {
 	r.Use(gin.Logger())
 
 	r.Use(gin.Recovery())
+
+	r.Use(middleware.CORSMiddleware())
 
 	gin.SetMode(setting.RunMode)
 

@@ -35,7 +35,7 @@ bee migrate -driver=mysql -conn="root:@tcp(127.0.0.1:3306)/go-blog-server"
 FATAL ▶ 0005 Column migration.timestamp type mismatch: TYPE: timestamp, DEFAULT: DEFAULT CURRENT_TIMESTAMP()
 https://blog.csdn.net/weixin_43671322/article/details/89537182
 ``` 
- go run ./cmd/main.go
+ go run cmd/main.go
 
  todo
  项目结构优化

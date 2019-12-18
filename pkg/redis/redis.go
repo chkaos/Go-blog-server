@@ -1,28 +1,47 @@
-package gredis
+package redis
 
 import (
 	"encoding/json"
+	"log"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/setting"
+	"Go-blog-server/pkg/setting"
 )
 
 var RedisConn *redis.Pool
 
-func Setup() error {
+func InitRedis() error {
+	var (
+		maxIdle, maxActive   int
+		idleTimeout          time.Duration
+		password, host, port string
+	)
+
+	sec, err := setting.Cfg.GetSection("redis")
+	if err != nil {
+		log.Fatal(2, "Fail to get section 'redis': %v", err)
+	}
+
+	maxIdle = sec.Key("MAXIDLE").MustInt()
+	maxActive = sec.Key("MAXACTIVE").MustInt()
+	idleTimeout = sec.Key("IDLETIMEOUT").MustDuration()
+	password = sec.Key("PASSWORD").String()
+	host = sec.Key("HOST").String()
+	port = sec.Key("PORT").String()
+
 	RedisConn = &redis.Pool{
-		MaxIdle:     setting.RedisSetting.MaxIdle,
-		MaxActive:   setting.RedisSetting.MaxActive,
-		IdleTimeout: setting.RedisSetting.IdleTimeout,
+		MaxIdle:     maxIdle,
+		MaxActive:   maxActive,
+		IdleTimeout: idleTimeout,
 		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", setting.RedisSetting.Host)
+			c, err := redis.Dial("tcp", host+port)
 			if err != nil {
 				return nil, err
 			}
-			if setting.RedisSetting.Password != "" {
-				if _, err := c.Do("AUTH", setting.RedisSetting.Password); err != nil {
+			if password != "" {
+				if _, err := c.Do("AUTH", password); err != nil {
 					c.Close()
 					return nil, err
 				}
@@ -101,4 +120,8 @@ func LikeDeletes(key string) error {
 	}
 
 	return nil
+}
+
+func CloseRedis() {
+	RedisConn.Close()
 }

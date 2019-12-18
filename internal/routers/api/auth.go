@@ -13,31 +13,34 @@ import (
 	"Go-blog-server/pkg/utils"
 )
 
-type user struct {
+type User struct {
 	Username string `valid:"Required; MaxSize(50)"`
 	Password string `valid:"Required; MaxSize(50)"`
 }
 
 // @Summary Get Auth
 // @Produce  json
-// @Param username body string true "userName"
+// @Param username body string true "username"
 // @Param password body string true "password"
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /api/auth [post]
 func GetAuth(c *gin.Context) {
-	username := c.Query("username")
-	password := c.Query("password")
-
 	valid := validation.Validation{}
-	a := user{Username: username, Password: password}
-	ok, _ := valid.Valid(&a)
+	var auth User
+	c.BindJSON(&auth)
+
+	ok, _ := valid.Valid(auth)
 
 	data := make(map[string]interface{})
 	code := e.INVALID_PARAMS
+	username := auth.Username
+	password := auth.Password
+
 	if ok {
-		user, isExist := models.CheckAuth(username, password)
-		if isExist {
+		user, isExistError := models.CheckAuth(username, password)
+		fmt.Println(user, isExistError)
+		if isExistError == nil {
 			token, err := utils.GenerateToken(username, password, user.Role)
 			fmt.Println(err)
 			if err != nil {
@@ -53,6 +56,7 @@ func GetAuth(c *gin.Context) {
 		}
 	} else {
 		for _, err := range valid.Errors {
+			fmt.Println(err.Key, err.Message)
 			logging.Info(err.Key, err.Message)
 		}
 	}

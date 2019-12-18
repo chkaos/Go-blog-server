@@ -21,15 +21,18 @@ type Article struct {
 	Pvsnum          int    `json:"pvs_num"`
 }
 
-func ExistArticleByID(id int) bool {
+func ExistArticleByID(id int) (bool, error) {
 	var article Article
-	db.Select("id").Where("id = ?", id).First(&article)
-
-	if article.ID > 0 {
-		return true
+	err := db.Select("id").Where("id = ?", id).First(&article).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return false, err
 	}
 
-	return false
+	if article.ID > 0 {
+		return true, nil
+	}
+
+	return false, nil
 }
 
 func GetArticleTotal(maps interface{}) (count int) {
@@ -49,8 +52,8 @@ func GetArticle(id int) (*Article, error) {
 	err := db.Where("id = ?", id).First(&article).Error
 
 	if err != nil && err != gorm.ErrRecordNotFound {
-        return nil, err
-    }
+		return nil, err
+	}
 
 	return &article, nil
 }

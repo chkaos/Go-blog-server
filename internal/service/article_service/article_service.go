@@ -1,12 +1,12 @@
-package article
+package article_service
 
 import (
 	"encoding/json"
 
 	"Go-blog-server/internal/models"
-	"Go-blog-server/pkg/gredis"
-	"Go-blog-server/pkg/logging"
 	"Go-blog-server/internal/service/cache_service"
+	"Go-blog-server/pkg/logging"
+	"Go-blog-server/pkg/redis"
 )
 
 type Article struct {
@@ -59,8 +59,8 @@ func (a *Article) Get() (*models.Article, error) {
 
 	cache := cache_service.Article{ID: a.ID}
 	key := cache.GetArticleKey()
-	if gredis.Exists(key) {
-		data, err := gredis.Get(key)
+	if redis.Exists(key) {
+		data, err := redis.Get(key)
 		if err != nil {
 			logging.Info(err)
 		} else {
@@ -74,6 +74,10 @@ func (a *Article) Get() (*models.Article, error) {
 		return nil, err
 	}
 
-	gredis.Set(key, article, 3600)
+	redis.Set(key, article, 3600)
 	return article, nil
+}
+
+func (a *Article) ExistByID() (bool, error) {
+	return models.ExistArticleByID(a.ID)
 }

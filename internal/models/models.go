@@ -22,8 +22,8 @@ type Model struct {
 
 func init() {
 	var (
-		err                                  error
-		dbType, dbName, user, password, host string
+		err                                        error
+		dbType, dbName, user, password, host, port string
 	)
 
 	sec, err := setting.Cfg.GetSection("database")
@@ -36,15 +36,17 @@ func init() {
 	user = sec.Key("DB_USER").String()
 	password = sec.Key("DB_PASSWORD").String()
 	host = sec.Key("DB_HOST").String()
+	port = sec.Key("DB_PORT").String()
 
-	db, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+	db, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		user,
 		password,
 		host,
+		port,
 		dbName))
 
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 	}
 
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
@@ -63,7 +65,7 @@ func init() {
 }
 
 func CloseDB() {
-	defer db.Close()
+	db.Close()
 }
 
 func updateTimeStampForCreateCallback(scope *gorm.Scope) {

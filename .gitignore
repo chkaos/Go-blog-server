@@ -1,6 +1,6 @@
 private.pem
 *.private.*
-mirgates
+.vscode
 
 # dependencies
 **/node_modules
@@ -10,3 +10,6 @@ vendor
 
 #log
 runtime
+
+# zip
+.zip

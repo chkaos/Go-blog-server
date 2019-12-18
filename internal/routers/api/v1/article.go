@@ -30,29 +30,29 @@ func GetArticle(c *gin.Context) {
 	valid.Min(id, 1, "id").Message("ID必须大于0")
 
 	if valid.HasErrors() {
-        service.MarkErrors(valid.Errors)
-        appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
-        return
+		service.MarkErrors(valid.Errors)
+		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+		return
 	}
-	
+
 	articleService := article_service.Article{ID: id}
 	exists, err := articleService.ExistByID()
-    if err != nil {
-        appG.Response(http.StatusOK, e.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
-        return
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
+		return
 	}
 	if !exists {
-        appG.Response(http.StatusOK, e.ERROR_NOT_EXIST_ARTICLE, nil)
-        return
-    }
-	code := e.INVALID_PARAMS
-	article, err := articleService.Get()
-    if err != nil {
-        appG.Response(http.StatusOK, e.ERROR_GET_ARTICLE_FAIL, nil)
-        return
-    }
+		appG.Response(http.StatusOK, e.ERROR_NOT_EXIST_ARTICLE, nil)
+		return
+	}
 
-    appG.Response(http.StatusOK, e.SUCCESS, article)
+	article, err := articleService.Get()
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR_GET_ARTICLE_FAIL, nil)
+		return
+	}
+
+	appG.Response(http.StatusOK, e.SUCCESS, article)
 }
 
 // @Summary Get multiple articles
@@ -194,7 +194,8 @@ func EditArticle(c *gin.Context) {
 
 	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
-		if models.ExistArticleByID(id) {
+		exist, _ := models.ExistArticleByID(id)
+		if exist {
 			if models.ExistTagByID(tagId) {
 				data := make(map[string]interface{})
 				if tagId > 0 {
@@ -247,7 +248,8 @@ func DeleteArticle(c *gin.Context) {
 
 	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
-		if models.ExistArticleByID(id) {
+		exist, _ := models.ExistArticleByID(id)
+		if exist {
 			models.DeleteArticle(id)
 			code = e.SUCCESS
 		} else {

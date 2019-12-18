@@ -1,5 +1,9 @@
 package models
 
+import (
+	"fmt"
+)
+
 type User struct {
 	Model
 
@@ -12,13 +16,30 @@ type User struct {
 	IsMuted  int    `json:"is_muted"`
 }
 
-func CheckAuth(username, password string) (User, bool) {
+func CheckAuth(username, password string) (User, error) {
 	var user User
-	var isExist bool
-	db.Select("id").Where(User{Username: username, Password: password}).First(&user)
-	if user.ID > 0 {
-		isExist = true
+	if err := db.Where(map[string]interface{}{"username": username, "password": password}).First(&user).Error; err != nil {
+		fmt.Println(user, err)
+		return user, err
 	}
 
-	return user, isExist
+	if user.ID > 0 {
+		return user, nil
+	}
+
+	return user, nil
 }
+
+// func CheckAuth(username, password string) (bool, User,) {
+// 	var auth User
+// 	err := db.Select("id").Where(User{Username: username, Password: password}).First(&auth).Error
+// 	if err != nil && err != gorm.ErrRecordNotFound {
+// 		return false, err
+// 	}
+
+// 	if auth.ID > 0 {
+// 		return true, auth, nil
+// 	}
+
+// 	return false, auth, nil
+// }

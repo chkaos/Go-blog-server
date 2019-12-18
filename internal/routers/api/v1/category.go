@@ -63,7 +63,7 @@ func AddCategory(c *gin.Context) {
 			code = e.SUCCESS
 			models.AddCategory(name, desc)
 		} else {
-			code = e.ERROR_EXIST_CATEGORY
+			code = e.ERROR_NOT_EXIST_CATEGORY
 		}
 	}
 
@@ -102,7 +102,7 @@ func EditCategory(c *gin.Context) {
 
 			models.EditCategory(id, data)
 		} else {
-			code = e.ERROR_EXIST_CATEGORY
+			code = e.ERROR_NOT_EXIST_CATEGORY
 		}
 	}
 

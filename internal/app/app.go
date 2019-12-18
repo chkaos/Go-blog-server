@@ -1,27 +1,41 @@
-package main
+package app
 
 import (
 	"context"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
-	_ "Go-blog-server/internal/models"
+	"Go-blog-server/internal/models"
 	"Go-blog-server/internal/routers"
+	"Go-blog-server/pkg/redis"
 	"Go-blog-server/pkg/setting"
 )
 
-// @title Swagger Astella API
-// @version 1.0
-// @description This is a sample server celler server.
+var server http.Server
 
-func main() {
-	router := routers.InitRouter()
+//启动服务器
+func Launch() {
+	models.InitModels()
+	redis.InitRedis()
+	r := routers.InitRouter()
+	startServer(r)
+}
 
-	s := &http.Server{
+//关闭操作
+func Destory() {
+	models.CloseDB()
+	redis.CloseRedis()
+}
+
+func startServer(router *gin.Engine) {
+	gin.SetMode(setting.RunMode)
+
+	server := &http.Server{
 		Addr:           fmt.Sprintf(":%d", setting.HTTPPort),
 		Handler:        router,
 		ReadTimeout:    setting.ReadTimeout,
@@ -29,10 +43,8 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	log.Printf("Listen on Port %d", setting.HTTPPort)
-
 	go func() {
-		if err := s.ListenAndServe(); err != nil {
+		if err := server.ListenAndServe(); err != nil {
 			log.Printf("Listen: %s\n", err)
 		}
 	}()
@@ -45,10 +57,9 @@ func main() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := s.Shutdown(ctx); err != nil {
+	if err := server.Shutdown(ctx); err != nil {
 		log.Fatal("Server Shutdown:", err)
 	}
 
 	log.Println("Server exiting")
-
 }
