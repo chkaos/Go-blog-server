@@ -9,7 +9,7 @@ import (
 	"os/signal"
 	"time"
 
-	_ "Go-blog-server/internal/models"
+	_ "Go-blog-server/internal/common"
 	"Go-blog-server/internal/routers"
 	"Go-blog-server/pkg/setting"
 )

@@ -10,13 +10,16 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.4.0
 	github.com/go-ini/ini v1.49.0
+	github.com/gogo/protobuf v1.2.0 // indirect
 	github.com/gomodule/redigo v2.0.1-0.20180401191855-9352ab68be13+incompatible
 	github.com/jinzhu/gorm v1.9.11
 	github.com/jinzhu/now v1.1.1 // indirect
+	github.com/stretchr/objx v0.1.1 // indirect
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.5.1
 	github.com/unknwon/com v1.0.1
+	github.com/wxnacy/wgo v1.0.4
 	golang.org/x/crypto v0.0.0-20191028145041-f83a4685e152 // indirect
 	golang.org/x/net v0.0.0-20191028085509-fe3aa8a45271 // indirect
 	golang.org/x/sys v0.0.0-20191028164358-195ce5e7f934 // indirect

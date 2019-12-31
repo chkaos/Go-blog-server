@@ -2,7 +2,6 @@ package utils
 
 import (
 	"Go-blog-server/pkg/setting"
-	"fmt"
 	jwt "github.com/dgrijalva/jwt-go"
 	"time"
 )
@@ -10,29 +9,28 @@ import (
 var jwtSecret = []byte(setting.JwtSecret)
 
 type Claims struct {
+	ID int          `json:"id"`
 	Username string `json:"username"`
-	Password string `json:"password"`
 	Role     int    `json:"role"`
 	jwt.StandardClaims
 }
 
-func GenerateToken(username, password string, role int) (string, error) {
+func GenerateToken(id int, username string, role int) (string, error) {
 	nowTime := time.Now()
-	expireTime := nowTime.Add(48 * time.Hour)
+	expireTime := nowTime.Add(72 * time.Hour)
 
 	claims := Claims{
+		id,
 		username,
-		password,
 		role,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
-			Issuer:    "astella",
+			Issuer:    "chakos",
 		},
 	}
 
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := tokenClaims.SignedString(jwtSecret)
-	fmt.Println(err)
 	return token, err
 }
 

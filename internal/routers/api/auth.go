@@ -8,15 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"Go-blog-server/internal/models"
+	"Go-blog-server/internal/service/authSrv"
 	"Go-blog-server/pkg/e"
-	"Go-blog-server/pkg/logging"
+	"Go-blog-server/pkg/helper"
 	"Go-blog-server/pkg/utils"
 )
-
-type User struct {
-	Username string `valid:"Required; MaxSize(50)"`
-	Password string `valid:"Required; MaxSize(50)"`
-}
 
 // @Summary Get Auth
 // @Produce  json
@@ -26,44 +22,39 @@ type User struct {
 // @Failure 500 {object} app.Response
 // @Router /api/auth [post]
 func GetAuth(c *gin.Context) {
+	appG := helper.Gin{C: c}
 	valid := validation.Validation{}
-	var auth User
+	
+	var auth models.UserModel
 	c.BindJSON(&auth)
-
-	ok, _ := valid.Valid(auth)
-
-	data := make(map[string]interface{})
 	code := e.INVALID_PARAMS
 	username := auth.Username
 	password := auth.Password
 
-	if ok {
-		user, isExistError := models.CheckAuth(username, password)
-		fmt.Println(user, isExistError)
-		if isExistError == nil {
-			token, err := utils.GenerateToken(username, password, user.Role)
-			fmt.Println(err)
-			if err != nil {
-				code = e.ERROR_AUTH_TOKEN
-			} else {
-				data["token"] = token
+	fmt.Println(auth)
+	valid.Required(auth.Username, "username")
+	valid.MinSize(auth.Password, 6, "password").Message("密码长度不得小于%d", 6)
 
-				code = e.SUCCESS
-			}
-
-		} else {
-			code = e.ERROR_AUTH
-		}
-	} else {
-		for _, err := range valid.Errors {
-			fmt.Println(err.Key, err.Message)
-			logging.Info(err.Key, err.Message)
-		}
+	ok, _ := valid.Valid(auth)
+	if !ok {
+		utils.MarkErrors(valid.Errors)
+		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
-	})
+	user, isExistError := authSrv.CheckAuth(username, password)
+	if(isExistError != nil){
+		appG.Response(http.StatusBadRequest, e.ERROR_AUTH, nil)
+		return 
+	}
+	
+	token, err := utils.GenerateToken(int(user.ID), username, user.Role)
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR_AUTH_TOKEN, nil)
+		return
+	} else {
+		code = e.SUCCESS
+	}
+
+	appG.Response(http.StatusOK, code, user.UserResponseWithToken(token))
 }
