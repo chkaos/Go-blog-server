@@ -5,7 +5,7 @@ import (
 
 	_ "Go-blog-server/docs"
 	"Go-blog-server/internal/routers/api"
-	// "Go-blog-server/internal/routers/api/v1"
+	_ "Go-blog-server/internal/routers/api/admin"
 	"Go-blog-server/pkg/setting"
 
 	"Go-blog-server/internal/middleware"
@@ -24,9 +24,19 @@ func InitRouter() *gin.Engine {
 
 	gin.SetMode(setting.RunMode)
 
-	r.POST("/auth", api.GetAuth)
+	
 
-	// apiv1 := r.Group("/api/v1")
+	apiAdmin := r.Group("/api/admin")
+	{
+		apiAdmin.POST("/auth", api.GetAuth)
+
+		// apiAdmin.GET("/tags", admin.GetTags)
+		// apiAdmin.POST("/tags", admin.AddTag)
+		// apiAdmin.PUT("/tags/:id", admin.EditTag)
+		// apiAdmin.DELETE("/tags/:id", admin.DeleteTag)
+	}
+
+	// apiv1 := r.Group("/api/admin")
 	// {
 	// 	apiv1.GET("/tags", v1.GetTags)
 	// 	apiv1.POST("/tags", v1.AddTag)

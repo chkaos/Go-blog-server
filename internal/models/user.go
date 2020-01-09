@@ -12,6 +12,10 @@ type UserModel struct {
 	IsMuted  int    `json:"is_muted"`
 }
 
+func (UserModel) TableName() string {
+	return "user"
+}
+
 type UserResponse struct {
 	ID         int `json:"id"`
 	CreatedAt  int `json:"created_at"`

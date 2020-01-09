@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"Go-blog-server/internal/models"
-	"Go-blog-server/internal/service/authSrv"
+	"Go-blog-server/internal/services"
 	"Go-blog-server/pkg/e"
 	"Go-blog-server/pkg/helper"
 	"Go-blog-server/pkg/utils"
@@ -42,8 +42,10 @@ func GetAuth(c *gin.Context) {
 		return
 	}
 
-	user, isExistError := authSrv.CheckAuth(username, password)
+	userSrv := services.NewUserService()
+	user, isExistError := userSrv.CheckAuth(username, password)
 	if(isExistError != nil){
+		fmt.Println(isExistError)
 		appG.Response(http.StatusBadRequest, e.ERROR_AUTH, nil)
 		return 
 	}

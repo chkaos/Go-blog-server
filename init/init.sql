@@ -4,9 +4,9 @@ CREATE TABLE `tag` (
   `desc` varchar(100) DEFAULT '' COMMENT '标签描述',
   `icon` varchar(100) DEFAULT '' COMMENT '标签对应图标名称',
   `article_num` int(10) DEFAULT 0 COMMENT '标签对应文章数目',
-  `created_at` int(10) unsigned DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `created_at` int(10) unsigned DEFAULT 0 COMMENT '创建时间',
   `modified_at` int(10) unsigned DEFAULT 0 COMMENT '修改时间',
-  `deleted_at` int(10) unsigned DEFAULT 0 COMMENT '删除时间',
+  `deleted_at` int(10) unsigned DEFAULT null COMMENT '删除时间',
   `state` tinyint(3) unsigned DEFAULT 1 COMMENT '状态 0为禁用、1为启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章标签管理';
@@ -16,9 +16,9 @@ CREATE TABLE `category` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT '' COMMENT '文章分类名称',
   `desc` varchar(100) DEFAULT '' COMMENT '文章分类描述',
-  `created_at` int(10) unsigned DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `created_at` int(10) unsigned DEFAULT 0 COMMENT '创建时间',
   `modified_at` int(10) unsigned DEFAULT 0 COMMENT '修改时间',
-  `deleted_at` int(10) unsigned DEFAULT 0 COMMENT '删除时间',
+  `deleted_at` int(10) unsigned DEFAULT null COMMENT '删除时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章分类管理';
 
@@ -32,7 +32,7 @@ CREATE TABLE `article` (
   `rendered_content` text,
   `created_at` int(10) DEFAULT NULL,
   `modified_at` int(10) unsigned DEFAULT 0 COMMENT '修改时间',
-  `deleted_at` int(10) unsigned DEFAULT 0 COMMENT '删除时间',
+  `deleted_at` int(10) unsigned DEFAULT null COMMENT '删除时间',
   `published_on` int(10) unsigned DEFAULT 0 COMMENT '发布时间',
   `thumb` varchar(100) DEFAULT '' COMMENT '缩略图链接',
   `source` tinyint(3) unsigned DEFAULT 0 COMMENT '状态 0原创 | 1转载 | 2混撰 | 3翻译',
@@ -62,7 +62,7 @@ CREATE TABLE `user` (
   `is_muted` tinyint(3) unsigned DEFAULT 0 COMMENT '状态 0为正常 1为禁言',
   `created_at` int(10) DEFAULT NULL,
   `modified_at` int(10) unsigned DEFAULT 0 COMMENT '修改时间',
-  `deleted_at` int(10) unsigned DEFAULT 0 COMMENT '删除时间',
+  `deleted_at` int(10) unsigned DEFAULT null COMMENT '删除时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户管理';
 
@@ -72,7 +72,7 @@ CREATE TABLE `comment` (
   `content` text,
   `created_at` int(10) unsigned DEFAULT 0 COMMENT '发表时间',
   `modified_at` int(10) unsigned DEFAULT 0 COMMENT '修改时间',
-  `deleted_at` int(10) unsigned DEFAULT 0 COMMENT '删除时间',
+  `deleted_at` int(10) unsigned DEFAULT null COMMENT '删除时间',
   `likes_num` int(10) unsigned DEFAULT 0 COMMENT '点赞数',
   `state` tinyint(3) DEFAULT 0 COMMENT '-2 垃圾评论 | -1 隐藏 | 0 待审核 | 1 通过',
   PRIMARY KEY (`id`)

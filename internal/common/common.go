@@ -31,7 +31,7 @@ func init() {
 	host = sec.Key("DB_HOST").String()
 	port = sec.Key("DB_PORT").String()
 
-	DB, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	DB, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		user,
 		password,
 		host,
@@ -51,6 +51,8 @@ func init() {
 
 	// 全局禁用表名复数
 	DB.SingularTable(true)
+
+	DB.LogMode(setting.RunMode == "debug")
 
 	DB.DB().SetMaxIdleConns(10)
 	DB.DB().SetMaxOpenConns(100)
@@ -90,4 +92,8 @@ func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
 
 func GetDB() *gorm.DB {
 	return DB
+}
+
+func GetDBWithTableName(tableName string) *gorm.DB {
+	return DB.Table(tableName)
 }
