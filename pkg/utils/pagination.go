@@ -1,18 +1,18 @@
 package utils
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/unknwon/com"
-
-	"Go-blog-server/pkg/setting"
 )
 
-func GetPage(c *gin.Context) int {
-	result := 0
-	page, _ := com.StrTo(c.Query("page")).Int()
-	if page > 0 {
-		result = (page - 1) * setting.PageSize
+func GetPaginationParams(c *gin.Context) (int, int) {
+	pageNum := com.StrTo(c.Query("pageNum")).MustInt()
+	pageSize := com.StrTo(c.Query("pageSize")).MustInt()
+	pageNum = (pageNum - 1) * pageSize
+	fmt.Println(pageNum, pageSize)
+	if pageNum == 0 && pageSize == 0 {
+		pageSize = -1
 	}
-
-	return result
+	return pageNum, pageSize
 }

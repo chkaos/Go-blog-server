@@ -1,40 +1,83 @@
 package models
 
-type TagModel struct {
+import "time"
+
+type Tag struct {
 	Model
 
-	Name       string `json:"name"`
-	Desc       string `json:"desc"`
-	Icon       string `json:"icon"`
-	ArticleNum int    `json:"article_num"`
-	State      int    `json:"state"`
+	Name       string    `json:"name"`
+	Desc       string    `json:"desc"`
+	Icon       string    `json:"icon"`
+	Articles   []*Article `gorm:"many2many:tag_relation;association_jointable_foreignkey:article_id;jointable_foreignkey:tag_id"`
+	ArticleNum int       `json:"article_num" sql:"-"`
 }
 
-func (TagModel) TableName() string {
-	return "tag"
+type TagRelation struct {
+	Model
+
+	TagID     uint `json:"tag_id"`
+	ArticleID uint `json:"article_id"`
+}
+
+type QueryTagReq struct {
+	Name       string    `json:"name"`
+
+	Pagination
 }
 
 type TagResponse struct {
-	ID         int `json:"id"`
-	CreatedAt  int `json:"created_at"`
-	ModifiedAt int `json:"modified_at"`
-	Name string  `json:"name"`
-	Desc      string `json:"desc"`
-	Icon   string `json:"icon"`
-	ArticleNum     int    `json:"article_num"` 
-	State   int    `json:"state"`
+	ID         uint      `json:"id"`
+	CreatedAt  *time.Time `json:"created_at,omitempty"`
+	ModifiedAt *time.Time `json:"modified_at,omitempty"`
+	Name       string    `json:"name"`
+	Desc       string    `json:"desc,omitempty"`
+	Icon       string    `json:"icon"`
+	ArticleNum int       `json:"article_num,omitempty"`
 }
 
-func (t *TagModel) TagResponse() TagResponse {
+type TagsSerializer struct {
+	Tags []*Tag
+}
+
+func (t *Tag) Response() TagResponse {
 	tag := TagResponse{
-		ID: t.ID,
-		CreatedAt: t.CreatedAt,
+		ID:         t.ID,
+		CreatedAt:  t.CreatedAt,
 		ModifiedAt: t.ModifiedAt,
-		Name: t.Name,
-		Desc:    t.Desc,
-		Icon:    t.Icon,
-		ArticleNum:    t.ArticleNum,
-		State:      t.State,
+		Name:       t.Name,
+		Desc:       t.Desc,
+		Icon:       t.Icon,
+		ArticleNum: len(t.Articles),
 	}
 	return tag
+}
+
+func (t *Tag) PreviewResponse() TagResponse {
+	tag := TagResponse{
+		ID:         t.ID,
+		Name:       t.Name,
+		Icon:       t.Icon,
+	}
+	return tag
+}
+
+func (s *TagsSerializer) Response() []TagResponse {
+	var tags []TagResponse
+	for _, tag := range s.Tags {
+		tags = append(tags, tag.Response())
+	}
+	return tags
+}
+
+func (s *TagsSerializer) PreviewResponse() []TagResponse {
+	var tags []TagResponse
+	for _, tag := range s.Tags {
+		tags = append(tags, tag.PreviewResponse())
+	}
+	return tags
+}
+
+//TagRelation db table name of tag relation
+func (t *TagRelation) TableName() string {
+	return "tag_relation"
 }

@@ -1,4 +1,4 @@
-package api
+package controllers
 
 import (
 	"fmt"
@@ -7,12 +7,20 @@ import (
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 
+	"Go-blog-server/internal/common"
 	"Go-blog-server/internal/models"
 	"Go-blog-server/internal/services"
 	"Go-blog-server/pkg/e"
-	"Go-blog-server/pkg/helper"
 	"Go-blog-server/pkg/utils"
 )
+
+type UserController struct {
+	service *services.UserService
+}
+
+func NewUserController() *UserController {
+	return &UserController{services.NewUserService()}
+}
 
 // @Summary Get Auth
 // @Produce  json
@@ -20,14 +28,13 @@ import (
 // @Param password body string true "password"
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
-// @Router /api/auth [post]
-func GetAuth(c *gin.Context) {
-	appG := helper.Gin{C: c}
+// @Router /api/admin/auth [post]
+func (uc *UserController) Auth(c *gin.Context) {
 	valid := validation.Validation{}
-	
-	var auth models.UserModel
-	c.BindJSON(&auth)
-	code := e.INVALID_PARAMS
+
+	var auth models.User
+	err := c.BindJSON(&auth)
+	fmt.Println(err)
 	username := auth.Username
 	password := auth.Password
 
@@ -38,25 +45,22 @@ func GetAuth(c *gin.Context) {
 	ok, _ := valid.Valid(auth)
 	if !ok {
 		utils.MarkErrors(valid.Errors)
-		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
+		common.ResponseWithValidation(c)
 		return
 	}
 
-	userSrv := services.NewUserService()
-	user, isExistError := userSrv.CheckAuth(username, password)
-	if(isExistError != nil){
-		fmt.Println(isExistError)
-		appG.Response(http.StatusBadRequest, e.ERROR_AUTH, nil)
-		return 
+	user, isExistError := uc.service.Auth(username, password)
+	fmt.Println(isExistError)
+	if isExistError != nil {
+		common.Response(c, http.StatusBadRequest, e.ERROR_AUTH, nil)
+		return
 	}
-	
+
 	token, err := utils.GenerateToken(int(user.ID), username, user.Role)
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_AUTH_TOKEN, nil)
+		common.Response(c, http.StatusInternalServerError, e.ERROR_AUTH_TOKEN, nil)
 		return
-	} else {
-		code = e.SUCCESS
 	}
 
-	appG.Response(http.StatusOK, code, user.UserResponseWithToken(token))
+	common.ResponseSuccess(c, user.ResponseWithToken(token))
 }

@@ -31,7 +31,7 @@ func init() {
 	host = sec.Key("DB_HOST").String()
 	port = sec.Key("DB_PORT").String()
 
-	DB, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+	DB, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true&loc=Local",
 		user,
 		password,
 		host,
@@ -60,7 +60,7 @@ func init() {
 	// 注册回调
 	DB.Callback().Create().Replace("gorm:create_time_stamp", updateTimeStampForCreateCallback)
 	DB.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
-	
+
 }
 
 func CloseDB() {

@@ -4,8 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	_ "Go-blog-server/docs"
-	"Go-blog-server/internal/routers/api"
-	_ "Go-blog-server/internal/routers/api/admin"
+	"Go-blog-server/internal/controllers"
 	"Go-blog-server/pkg/setting"
 
 	"Go-blog-server/internal/middleware"
@@ -20,23 +19,28 @@ func InitRouter() *gin.Engine {
 
 	r.Use(gin.Recovery())
 
-	r.Use(middleware.CORSMiddleware())
+	r.Use(middleware.CORS())
 
 	gin.SetMode(setting.RunMode)
 
-	
+	uc := controllers.NewUserController()
+	tc := controllers.NewTagController()
 
 	apiAdmin := r.Group("/api/admin")
 	{
-		apiAdmin.POST("/auth", api.GetAuth)
+		apiAdmin.POST("/auth", uc.Auth)
 
-		// apiAdmin.GET("/tags", admin.GetTags)
-		// apiAdmin.POST("/tags", admin.AddTag)
+		apiAdmin.GET("/tags", tc.GetTags)
+		apiAdmin.GET("/alltags", tc.GetAllTags)
+		apiAdmin.POST("/tags", tc.AddTag)
 		// apiAdmin.PUT("/tags/:id", admin.EditTag)
 		// apiAdmin.DELETE("/tags/:id", admin.DeleteTag)
 	}
 
-	// apiv1 := r.Group("/api/admin")
+	apiv1 := r.Group("/api/v1")
+	{
+		apiv1.GET("/tags", tc.GetAllTags)
+	}
 	// {
 	// 	apiv1.GET("/tags", v1.GetTags)
 	// 	apiv1.POST("/tags", v1.AddTag)

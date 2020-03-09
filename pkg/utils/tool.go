@@ -15,6 +15,15 @@ func MarkErrors(errors []*validation.Error) {
 
 	return
 }
+
+func FuzzyInquiry(word string) (res string){
+	res = fmt.Sprintf("%s%s%s", "%", word, "%")
+
+	return
+}
+
+
+
 // func QueryFilter(model interface{}, filterkeys []string) string {
 // 	var res string
 // 	fields := reflect.TypeOf(model)
