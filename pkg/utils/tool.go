@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+
 	"github.com/astaxie/beego/validation"
 
 	"Go-blog-server/pkg/logging"
@@ -16,13 +17,11 @@ func MarkErrors(errors []*validation.Error) {
 	return
 }
 
-func FuzzyInquiry(word string) (res string){
+func FuzzyInquiry(word string) (res string) {
 	res = fmt.Sprintf("%s%s%s", "%", word, "%")
 
 	return
 }
-
-
 
 // func QueryFilter(model interface{}, filterkeys []string) string {
 // 	var res string
@@ -101,7 +100,7 @@ func FuzzyInquiry(word string) (res string){
 //         return strconv.Quote(v.String())
 //     case reflect.Chan, reflect.Func, reflect.Ptr, reflect.Slice, reflect.Map:
 //         return v.Type().String() + " 0x" +
-//             strconv.FormatUint(uint64(v.Pointer()), 16)
+//             strconv.FormatUint(Uint64(v.Pointer()), 16)
 //     default: // reflect.Array, reflect.Struct, reflect.Interface
 //         return v.Type().String() + " value"
 //     }

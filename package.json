@@ -32,6 +32,9 @@
     }
   },
   "lint-staged": {
-    "*.go": ["npm run lint", "git add ."]
+    "*.go": [
+      "npm run lint",
+      "git add ."
+    ]
   }
 }

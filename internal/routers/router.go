@@ -8,8 +8,9 @@ import (
 	"Go-blog-server/pkg/setting"
 
 	"Go-blog-server/internal/middleware"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func InitRouter() *gin.Engine {
@@ -30,11 +31,11 @@ func InitRouter() *gin.Engine {
 	{
 		apiAdmin.POST("/auth", uc.Auth)
 
-		apiAdmin.GET("/tags", tc.GetTags)
-		apiAdmin.GET("/alltags", tc.GetAllTags)
-		apiAdmin.POST("/tags", tc.AddTag)
-		// apiAdmin.PUT("/tags/:id", admin.EditTag)
-		// apiAdmin.DELETE("/tags/:id", admin.DeleteTag)
+		apiAdmin.GET("/tag", tc.GetTags)
+		apiAdmin.GET("/tags", tc.GetAllTags)
+		apiAdmin.POST("/tag", tc.AddTag)
+		apiAdmin.PUT("/tag", tc.UpdateTag)
+		apiAdmin.DELETE("/tag", tc.DeleteTag)
 	}
 
 	apiv1 := r.Group("/api/v1")

@@ -7,37 +7,37 @@ import (
 type Article struct {
 	Model
 
-	CategoryID      uint      `json:"category_id"`
-	Category        Category  `json:"category";association_foreignkey:category_id`
-	Title           string    `json:"title"`
-	Desc            string    `json:"desc"`
-	Keywords        string    `json:keywords`
-	Content         string    `json:"content"`
-	RenderedContent string    `json:"rendered_content"`
+	CategoryID      int        `json:"category_id"`
+	Category        Category   `json:"category";association_foreignkey:category_id`
+	Title           string     `json:"title"`
+	Desc            string     `json:"desc"`
+	Keywords        string     `json:keywords`
+	Content         string     `json:"content"`
+	RenderedContent string     `json:"rendered_content"`
 	Tags            []*Tag     `gorm:"many2many:mapping-article-tag;association_jointable_foreignkey:tag_id;jointable_foreignkey:article_id"`
 	Published_At    *time.Time `json:"published_at"`
-	Source          int       `json:"source"`
-	ReproduceURL    string    `json:"reproduce_url"`
-	Thumb           string    `json:"thumb"`
-	LikesNum        int       `json:"like_num", gorm:"-"`
-	PvsNm           int       `json:"pvs_num", gorm:"-"`
-	CommentNum      int       `json:"comments_num", gorm:"-"`
-	State           int       `json:"state"`
+	Source          int        `json:"source"`
+	ReproduceURL    string     `json:"reproduce_url"`
+	Thumb           string     `json:"thumb"`
+	LikesNum        int        `json:"like_num", gorm:"-"`
+	PvsNm           int        `json:"pvs_num", gorm:"-"`
+	CommentNum      int        `json:"comments_num", gorm:"-"`
+	State           int        `json:"state"`
 }
 
 type ArticleResponse struct {
-	ID              uint          `json:"id"`
-	CreatedAt       *time.Time     `json:"created_at,omitempty"`
-	ModifiedAt      *time.Time     `json:"modified_at,omitempty"`
-	CategoryID      uint          `json:"category_id"`
-	Category        Category  `json:"category"`
+	ID              int           `json:"id"`
+	CreatedAt       *time.Time    `json:"created_at,omitempty"`
+	ModifiedAt      *time.Time    `json:"modified_at,omitempty"`
+	CategoryID      int           `json:"category_id"`
+	Category        Category      `json:"category"`
 	Title           string        `json:"title"`
 	Desc            string        `json:"desc"`
 	Keywords        string        `json:keywords`
 	Content         string        `json:"content"`
 	RenderedContent string        `json:"rendered_content"`
 	Tags            []TagResponse `json:"tags"`
-	Published_At    *time.Time     `json:"published_at"`
+	Published_At    *time.Time    `json:"published_at"`
 	Source          int           `json:"source"`
 	ReproduceURL    string        `json:"reproduce_url"`
 	Thumb           string        `json:"thumb"`

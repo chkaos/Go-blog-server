@@ -8,7 +8,7 @@ type AddArticleForm struct {
 }
 
 type EditArticleForm struct {
-	Id    uint   `form:"name" valid:"Required;Min(1)"`
+	Id    int    `form:"name" valid:"Required;Min(1)"`
 	Name  string `form:"name" valid:"Required;MaxSize(100)"`
 	Desc  string `form:"desc" valid:"Required;MaxSize(100)"`
 	Icon  string `form:"string" valid:"MaxSize(100)"`

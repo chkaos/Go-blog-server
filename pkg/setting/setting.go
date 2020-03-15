@@ -1,9 +1,10 @@
 package setting
 
 import (
-	"github.com/go-ini/ini"
 	"log"
 	"time"
+
+	"github.com/go-ini/ini"
 )
 
 var (
@@ -15,8 +16,9 @@ var (
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
 
-	PageSize  int
-	JwtSecret string
+	TimeFormat string
+	PageSize   int
+	JwtSecret  string
 )
 
 func init() {
@@ -52,6 +54,7 @@ func LoadApp() {
 		log.Fatalf("Fail to get section 'app': %v", err)
 	}
 
+	TimeFormat = sec.Key("TIME_FORMAT").MustString("")
 	JwtSecret = sec.Key("JWT_SECRET").MustString("!@)*#)!@U#@*!@!)")
 	PageSize = sec.Key("PAGE_SIZE").MustInt(10)
 }

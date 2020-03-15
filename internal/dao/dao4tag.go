@@ -2,6 +2,7 @@ package dao
 
 import (
 	_ "fmt"
+
 	"github.com/jinzhu/gorm"
 
 	"Go-blog-server/internal/models"
@@ -22,6 +23,10 @@ func (d *TagDAO) AddTag(tag *models.Tag) error {
 	return d.db().Create(tag).Error
 }
 
+func (d *TagDAO) UptadeTag(tag *models.Tag) error {
+	return d.db().Model(&models.Tag{}).Update(tag).Error
+}
+
 // Querytags  query all tags
 func (d *TagDAO) QueryAllTags() (tags []*models.Tag, err error) {
 	err = d.db().Find(&tags).Error
@@ -36,11 +41,11 @@ func (d *TagDAO) QueryTagByName(name string) (tag *models.Tag, err error) {
 			err = nil
 		}
 	}
-	return 
+	return
 }
 
 // QueryTag query tag by tag id
-func (d *TagDAO) QueryTagByID(id uint) (tag *models.Tag, err error) {
+func (d *TagDAO) QueryTagByID(id int) (tag *models.Tag, err error) {
 	tag = &models.Tag{}
 	if err = d.db().Where("id = ?", id).First(&tag).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -51,7 +56,7 @@ func (d *TagDAO) QueryTagByID(id uint) (tag *models.Tag, err error) {
 }
 
 // DeleteTag delete tag
-func (d *TagDAO) DeleteTag(id uint) error {
+func (d *TagDAO) DeleteTag(id int) error {
 	return d.db().Where("id = ?", id).Delete(&models.Tag{}).Error
 }
 
@@ -73,11 +78,11 @@ func (d *TagDAO) QueryTags(req *models.QueryTagReq) (total int, tags []*models.T
 	}
 
 	if req.PageNum > 0 && req.PageSize > 0 {
-    Db = Db.Offset((req.PageNum - 1) * req.PageSize).Limit(req.PageSize)
+		Db = Db.Offset((req.PageNum - 1) * req.PageSize).Limit(req.PageSize)
 	}
 
 	err = Db.Find(&tags).Error
-	
+
 	return
 }
 
@@ -90,13 +95,13 @@ func (d *TagDAO) QueryTags(req *models.QueryTagReq) (total int, tags []*models.T
 // }
 
 // QueryTagRelationByIDs  Query tag relation by ids
-// func (d *TagDAO) QueryTagRelationByIDs(ids []uint) (lr []*models.TagRelation, err error) {
+// func (d *TagDAO) QueryTagRelationByIDs(ids []int) (lr []*models.TagRelation, err error) {
 // 	err = d.db().Where("id in (?)", ids).Find(lr).Error
 // 	return
 // }
 
 // CheckTagRelationExist check tag relation exist
-// func (d *TagDAO) CheckTagRelationExist(id uint) (result bool, err error) {
+// func (d *TagDAO) CheckTagRelationExist(id int) (result bool, err error) {
 // 	result = false
 // 	lr := &models.TagRelation{}
 // 	err = d.db().Where("active = ?", 1).Where(" id = ?", id).First(lr).Error
@@ -116,6 +121,6 @@ func (d *TagDAO) QueryTags(req *models.QueryTagReq) (total int, tags []*models.T
 // }
 
 // DeleteTagRelation delete relation of tag
-func (d *TagDAO) DeleteTagRelation(id uint) (err error) {
+func (d *TagDAO) DeleteTagRelation(id int) (err error) {
 	return d.db().Where(" id = ?", id).Update("active", 0).Error
 }

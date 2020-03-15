@@ -1,11 +1,10 @@
 package services
 
 import (
-	"fmt"
-
+	"Go-blog-server/internal/common"
 	"Go-blog-server/internal/dao"
 	"Go-blog-server/internal/models"
-	"Go-blog-server/pkg/e"
+	"fmt"
 )
 
 type TagService struct {
@@ -16,54 +15,112 @@ func NewTagService() *TagService {
 	return &TagService{dao: new(dao.TagDAO)}
 }
 
-// QueryTags 
-func (s *TagService) QueryTagsReq(req *models.QueryTagReq) (rep *models.PaginationRep, err error) {
+// QueryTags
+func (s *TagService) QueryTagsReq(req *models.QueryTagReq) (resp common.Response, err error) {
 	var (
-		total                int
-		tags []*models.Tag
+		total int
+		tags  []*models.Tag
 	)
 
 	if total, tags, err = s.dao.QueryTags(req); err != nil {
+		resp.Err = common.ERROR_GET_TAG_FAIL
 		return
 	}
 
 	tagsSerializer := models.TagsSerializer{tags}
 
-	rep = &models.PaginationRep{
+	rep := &models.PaginationRep{
 		Total:    total,
 		PageSize: req.PageSize,
 		PageNum:  req.PageNum,
-		List: tagsSerializer.Response(),
+		List:     tagsSerializer.Response(),
 	}
+
+	resp = common.Response{Err: common.SUCCESS, Data: rep}
+
 	return
 }
 
-func (s *TagService) QueryAllTags() (res []models.TagResponse, err error) {
+func (s *TagService) QueryAllTags() (resp common.Response, err error) {
 	var tags []*models.Tag
 
 	if tags, err = s.dao.QueryAllTags(); err != nil {
+		resp.Err = common.ERROR_GET_TAG_FAIL
 		return
 	}
 
 	tagsSerializer := models.TagsSerializer{tags}
-	res = tagsSerializer.PreviewResponse()
+	tagRes := tagsSerializer.PreviewResponse()
+	resp = common.Response{Err: common.SUCCESS, Data: tagRes}
 
-	return 
+	return
 }
 
-func (s *TagService) AddTag(tag *models.Tag) (error) {
+func (s *TagService) AddTag(tag *models.Tag) (resp common.Response, err error) {
 
-  var (
-		res *models.Tag
-		err error
+	var (
+		tagModel *models.Tag
 	)
-	res, err = s.dao.QueryTagByName(tag.Name)
+	tagModel, err = s.dao.QueryTagByName(tag.Name)
 
-	if res.ID == 0 {
-		err = s.dao.AddTag(tag)
-	} else {
-    err = e.DataExisted
+	if tagModel.ID > 0 {
+
+		resp.Err = common.ERROR_TAG_EXIST
+		return
 	}
-		
-	return  err
+
+	if err = s.dao.AddTag(tag); err != nil {
+		resp.Err = common.ERROR_ADD_TAG_FAIL
+	} else {
+		resp.Err = common.SUCCESS
+		resp.Data = tag.PreviewResponse()
+	}
+
+	return
+}
+
+func (s *TagService) UpdateTag(tag *models.Tag) (resp common.Response, err error) {
+
+	var (
+		tagModel *models.Tag
+	)
+	tagModel, err = s.dao.QueryTagByID(tag.ID)
+
+	fmt.Println(tagModel, err)
+
+	if tagModel.ID == 0 {
+
+		resp.Err = common.ERROR_TAG_NOT_EXIST
+		return
+	}
+
+	if err = s.dao.UptadeTag(tag); err != nil {
+		resp.Err = common.ERROR_UPDATE_TAG_FAIL
+	} else {
+		resp.Err = common.SUCCESS
+	}
+
+	return
+}
+
+func (s *TagService) DeleteTag(id int) (resp common.Response, err error) {
+
+	var (
+		tagModel *models.Tag
+	)
+	tagModel, err = s.dao.QueryTagByID(id)
+
+	if tagModel.ID == 0 {
+
+		resp.Err = common.ERROR_TAG_NOT_EXIST
+		return
+	}
+
+	if err = s.dao.DeleteTag(id); err != nil {
+		resp.Err = common.ERROR_DETELE_TAG_FAIL
+	} else {
+		resp.Err = common.SUCCESS
+	}
+
+	return
 }

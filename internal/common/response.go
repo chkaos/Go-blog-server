@@ -4,43 +4,41 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"Go-blog-server/pkg/e"
 )
 
-type BaseResponse struct {
-	Code int         `json:"code"`
-	Msg  string      `json:"msg"`
+type Response struct {
+	Err
 	Data interface{} `json:"data,omitempty"`
 }
 
 // Response setting gin.JSON
-func Response(c *gin.Context, httpCode, errCode int, data interface{}) {
-	c.JSON(httpCode, BaseResponse{
-		Code: errCode,
-		Msg:  e.GetMsg(errCode),
-		Data: data,
-	})
+func WriteResponse(c *gin.Context, httpCode int, resp Response) {
+	c.JSON(httpCode, resp)
 }
 
-func ResponseWithPanic(c *gin.Context, err error) {
-	c.JSON(http.StatusBadGateway, gin.H{
-		"success": false,
-	})
-}
+// func ResponseWithPanic(c *gin.Context, err error) {
+// 	c.JSON(http.StatusBadGateway, gin.H{
+// 		"success": false,
+// 	})
+// }
 
 func ResponseWithValidation(c *gin.Context) {
-	errCode := e.INVALID_PARAMS
-	c.JSON(http.StatusBadRequest, BaseResponse{
-		Code: errCode,
-		Msg:  e.GetMsg(errCode),
+	c.JSON(http.StatusBadRequest, Response{
+		Err: ERROR_INVALID_PAMAMS,
 	})
 }
 
-func ResponseSuccess(c *gin.Context, data interface{}) {
-	errCode := e.SUCCESS
-	c.JSON(http.StatusOK, BaseResponse{
-		Code: errCode,
-		Msg:  e.GetMsg(errCode),
-		Data: data,
-	})
+func WriteResponseSuccess(c *gin.Context, resp Response) {
+	c.JSON(http.StatusOK, resp)
 }
+
+// func WriteJSON(c *gin.Context, data interface{}, err error) {
+// 	httpcode := http.StatusOK
+// 	bcode := Cause(err)
+
+// 	c.JSON(httpcode, Response{
+// 		Code: bcode.Code(),
+// 		Msg:  bcode.Message(),
+// 		Data: data,
+// 	})
+// }

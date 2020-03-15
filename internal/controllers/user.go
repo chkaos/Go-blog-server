@@ -10,7 +10,6 @@ import (
 	"Go-blog-server/internal/common"
 	"Go-blog-server/internal/models"
 	"Go-blog-server/internal/services"
-	"Go-blog-server/pkg/e"
 	"Go-blog-server/pkg/utils"
 )
 
@@ -52,15 +51,17 @@ func (uc *UserController) Auth(c *gin.Context) {
 	user, isExistError := uc.service.Auth(username, password)
 	fmt.Println(isExistError)
 	if isExistError != nil {
-		common.Response(c, http.StatusBadRequest, e.ERROR_AUTH, nil)
+		common.WriteResponse(c, http.StatusBadRequest, common.Response{
+			Err: common.ERROR_AUTH,
+		})
 		return
 	}
 
 	token, err := utils.GenerateToken(int(user.ID), username, user.Role)
 	if err != nil {
-		common.Response(c, http.StatusInternalServerError, e.ERROR_AUTH_TOKEN, nil)
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_AUTH_TOKEN})
 		return
 	}
 
-	common.ResponseSuccess(c, user.ResponseWithToken(token))
+	common.WriteResponseSuccess(c, common.Response{Err: common.SUCCESS, Data: user.ResponseWithToken(token)})
 }

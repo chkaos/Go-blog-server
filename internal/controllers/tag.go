@@ -8,9 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"Go-blog-server/internal/common"
-		"Go-blog-server/internal/validators"
 	"Go-blog-server/internal/models"
 	"Go-blog-server/internal/services"
+	"Go-blog-server/internal/validators"
 	"Go-blog-server/pkg/e"
 )
 
@@ -29,7 +29,7 @@ func NewTagController() *TagController {
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /api/admin/tags [get]
-func (tc *TagController)  GetTags(c *gin.Context) {
+func (tc *TagController) GetTags(c *gin.Context) {
 
 	// pageNum, pageSize := utils.GetPaginationParams(c)
 	// fmt.Println(pageNum, pageSize)
@@ -37,93 +37,97 @@ func (tc *TagController)  GetTags(c *gin.Context) {
 	err := c.Bind(&req)
 	fmt.Println(req)
 
-	res, err := tc.service.QueryTagsReq(&req)
+	resp, err := tc.service.QueryTagsReq(&req)
 	if err != nil {
-		common.Response(c, http.StatusBadRequest, e.ERROR_GET_TAGS_FAIL, nil)
+		common.WriteResponse(c, http.StatusBadRequest, resp)
 		return
 	}
 
-	common.ResponseSuccess(c, res)
+	common.WriteResponseSuccess(c, resp)
 }
 
 func (tc *TagController) GetAllTags(c *gin.Context) {
 
-	tags, err := tc.service.QueryAllTags()
+	if resp, err := tc.service.QueryAllTags(); err != nil {
+		common.WriteResponse(c, http.StatusBadRequest, resp)
+	} else {
+		common.WriteResponseSuccess(c, resp)
+	}
 
-	if err != nil {
-		common.Response(c, http.StatusBadRequest, e.ERROR_GET_TAGS_FAIL, nil)
+}
+
+func (tc *TagController) AddTag(c *gin.Context) {
+	var (
+		form validators.AddTagForm
+		tag  models.Tag
+	)
+
+	httpCode, Err := validators.BindAndValid(c, &form)
+
+	if httpCode != e.SUCCESS {
+		common.WriteResponse(c, httpCode, common.Response{Err: Err})
 		return
 	}
 
-	common.ResponseSuccess(c, tags)
-}
+	tag = form.Transform()
 
+	resp, err := tc.service.AddTag(&tag)
+	if err != nil {
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_ADD_TAG_FAIL})
+		return
+	}
 
-
-func (tc *TagController) AddTag(c *gin.Context) {
-		var (
-			form validators.AddTagForm
-			tag models.Tag
-		)
-
-		httpCode, errCode := validators.BindAndValid(c, &form)
-
-		if errCode != e.SUCCESS {
-			common.Response(c, httpCode, errCode, nil)
-			return
-		}
-
-		tag = form.Transform()
-
-		res, err := tc.service.AddTag(&tag)
-		if err != nil {
-			common.Response(c, http.StatusInternalServerError, e.ERROR_ADD_TAG_FAIL, nil)
-			return
-		}
-
-		common.ResponseSuccess(c, res)
+	common.WriteResponseSuccess(c, resp)
 
 }
 
-// // func UpdateTag(c *gin.Context) {
+func (tc *TagController) UpdateTag(c *gin.Context) {
 
-// // 	pageNum, pageSize := utils.GetPaginationParams(c)
-// // 	fmt.Println(pageNum, pageSize)
+	var (
+		form validators.EditTagForm
+		tag  models.Tag
+	)
 
-// // 	tags, err := s.FindMany(map[string]interface{}{}, pageNum, pageSize)
-// // 	if err != nil {
-// // 		fmt.Println(err)
-// // 		common.Response(http.StatusBadRequest, e.ERROR_AUTH, nil)
-// // 		return
-// // 	}
-// // 	count, err := s.CountAll()
-// // 	fmt.Println(err)
+	httpCode, Err := validators.BindAndValid(c, &form)
 
-// // 	tagsSerializer := serializers.TagsSerializer{tags}
-// // 	common.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
-// // 		"list":  tagsSerializer.Response(),
-// // 		"total": count,
-// // 	})
-// // }
+	fmt.Println(form)
 
-// // func DeleteTag(c *gin.Context) {
-// // 	common := helper.Gin{C: c}
+	if httpCode != e.SUCCESS {
+		common.WriteResponse(c, httpCode, common.Response{Err: Err})
+		return
+	}
 
-// // 	pageNum, pageSize := utils.GetPaginationParams(c)
-// // 	fmt.Println(pageNum, pageSize)
+	tag = form.Transform()
 
-// // 	tags, err := s.FindMany(map[string]interface{}{}, pageNum, pageSize)
-// // 	if err != nil {
-// // 		fmt.Println(err)
-// // 		common.Response(http.StatusBadRequest, e.ERROR_AUTH, nil)
-// // 		return
-// // 	}
-// // 	count, err := s.CountAll()
-// // 	fmt.Println(err)
+	resp, err := tc.service.UpdateTag(&tag)
+	if err != nil {
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_UPDATE_TAG_FAIL})
+		return
+	}
 
-// // 	tagsSerializer := serializers.TagsSerializer{tags}
-// // 	common.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
-// // 		"list":  tagsSerializer.Response(),
-// // 		"total": count,
-// // 	})
-// // }
+	common.WriteResponseSuccess(c, resp)
+}
+
+func (tc *TagController) DeleteTag(c *gin.Context) {
+	var (
+		form validators.IDForm
+	)
+
+	// fmt.Println(c.PostForm("id"))
+	// fmt.Println(form)
+
+	httpCode, Err := validators.BindAndValid(c, &form)
+
+	if httpCode != e.SUCCESS {
+		common.WriteResponse(c, httpCode, common.Response{Err: Err})
+		return
+	}
+
+	resp, err := tc.service.DeleteTag(form.ID)
+	if err != nil {
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_DETELE_TAG_FAIL})
+		return
+	}
+
+	common.WriteResponseSuccess(c, resp)
+}

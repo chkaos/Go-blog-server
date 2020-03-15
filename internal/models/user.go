@@ -15,20 +15,20 @@ type User struct {
 }
 
 type UserResponse struct {
-	ID         uint      `json:"id"`
+	ID         int        `json:"id"`
 	CreatedAt  *time.Time `json:"created_at,omitempty"`
 	ModifiedAt *time.Time `json:"modified_at,omitempty"`
-	Username   string    `json:"username"`
-	URL        string    `json:"url"`
-	Avatar     string    `json:"avatar"`
-	Role       int       `json:"role"`
-	Source     int       `json:"source"`
-	IsMuted    int       `json:"is_muted"`
-	Token      string    `json:"token"`
+	Username   string     `json:"username"`
+	URL        string     `json:"url"`
+	Avatar     string     `json:"avatar"`
+	Role       int        `json:"role"`
+	Source     int        `json:"source"`
+	IsMuted    int        `json:"is_muted"`
+	Token      string     `json:"token"`
 }
 
 type UsersSerializer struct {
-	Users [] *User
+	Users []*User
 }
 
 func (u *User) Response() UserResponse {
