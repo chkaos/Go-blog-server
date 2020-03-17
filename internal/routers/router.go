@@ -27,22 +27,25 @@ func InitRouter() *gin.Engine {
 	uc := controllers.NewUserController()
 	tc := controllers.NewTagController()
 	cc := controllers.NewCategoryController()
+	fc := controllers.NewFileController()
 
 	apiAdmin := r.Group("/api/admin")
 	{
 		apiAdmin.POST("/auth", uc.Auth)
 
+		apiAdmin.POST("/file/upload", fc.Upload)
+
 		apiAdmin.GET("/tag", tc.GetTags)
 		apiAdmin.GET("/tags", tc.GetAllTags)
 		apiAdmin.POST("/tag", tc.AddTag)
 		apiAdmin.PUT("/tag", tc.UpdateTag)
-		apiAdmin.DELETE("/tag", tc.DeleteTag)
+		apiAdmin.DELETE("/tag/:id", tc.DeleteTag)
 
 		apiAdmin.GET("/category", cc.GetCategorys)
 		apiAdmin.GET("/categorys", cc.GetAllCategorys)
 		apiAdmin.POST("/category", cc.AddCategory)
 		apiAdmin.PUT("/category", cc.UpdateCategory)
-		apiAdmin.DELETE("/category", cc.DeleteCategory)
+		apiAdmin.DELETE("/category/:id", cc.DeleteCategory)
 	}
 
 	apiv1 := r.Group("/api/v1")

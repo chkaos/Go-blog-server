@@ -19,18 +19,23 @@ var (
 	TimeFormat string
 	PageSize   int
 	JwtSecret  string
+
+	EndPoint   string
+	BucketName string
+	SourceURL  string
 )
 
 func init() {
 	var err error
-	Cfg, err = ini.Load("./configs/app.ini")
+	Cfg, err = ini.Load("./conf/app.ini")
 	if err != nil {
-		log.Fatalf("Fail to parse 'configs/app.ini': %v", err)
+		log.Fatalf("Fail to parse 'conf/app.ini': %v", err)
 	}
 
 	LoadBase()
 	LoadServer()
 	LoadApp()
+	LoadOSS()
 }
 
 func LoadBase() {
@@ -59,6 +64,14 @@ func LoadApp() {
 	PageSize = sec.Key("PAGE_SIZE").MustInt(10)
 }
 
-// func String(string) string{
-//     return Cfg.GetSection
-// }
+func LoadOSS() {
+	sec, err := Cfg.GetSection("oss")
+	if err != nil {
+		log.Fatalf("Fail to get section 'oss': %v", err)
+	}
+
+	EndPoint = sec.Key("END_POINT").MustString("")
+	BucketName = sec.Key("BUCKET_NAME").MustString("")
+	SourceURL = sec.Key("SOURSE_URL").MustString("")
+
+}

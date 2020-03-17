@@ -8,7 +8,7 @@ type Category struct {
 	Name       string     `json:"name"`
 	Desc       string     `json:"desc"`
 	Articles   []*Article `gorm:"foreignkey:category_id"`
-	ArticleNum int        `json:"article_num" sql:"-"`
+	ArticleNum int        `json:"article_num" sql:"-" default:"0"`
 }
 
 type QueryCategoryReq struct {
@@ -21,7 +21,7 @@ type CategoryResponse struct {
 	ModifiedAt *time.Time `json:"modified_at,omitempty"`
 	Name       string     `json:"name"`
 	Desc       string     `json:"desc,omitempty"`
-	ArticleNum int        `json:"article_num,omitempty"`
+	ArticleNum int        `json:"article_num,omitempty" default:"0"`
 }
 
 type CategorysSerializer struct {

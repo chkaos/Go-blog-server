@@ -62,6 +62,25 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户管理';
 
+CREATE TABLE `file` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL COMMENT '文件名',
+  `url` varchar(100) DEFAULT '' COMMENT '文件oss链接',
+  `type` varchar(100) DEFAULT '' COMMENT '文件后缀',
+  `size` bigint(100) DEFAULT '' COMMENT '文件大小',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `deleted_at` timestamp DEFAULT null COMMENT '删除时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件管理';
+
+CREATE TABLE `system_config` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `oss_access_key_id` varchar(100) NOT NULL COMMENT 'ossID',
+  `oss_access_key_sercet` varchar(100) DEFAULT '' COMMENT 'oss密钥',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统设置';
+
 CREATE TABLE `comment` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL COMMENT '用户id',

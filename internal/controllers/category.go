@@ -109,21 +109,15 @@ func (tc *CategoryController) UpdateCategory(c *gin.Context) {
 }
 
 func (tc *CategoryController) DeleteCategory(c *gin.Context) {
-	var (
-		form validators.IDForm
-	)
 
-	// fmt.Println(c.PostForm("id"))
-	// fmt.Println(form)
-
-	httpCode, Err := validators.BindAndValid(c, &form)
+	httpCode, Err, id := validators.BindID(c)
 
 	if httpCode != e.SUCCESS {
 		common.WriteResponse(c, httpCode, common.Response{Err: Err})
 		return
 	}
 
-	resp, err := tc.service.DeleteCategory(form.ID)
+	resp, err := tc.service.DeleteCategory(id)
 	if err != nil {
 		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_DETELE_TAG_FAIL})
 		return

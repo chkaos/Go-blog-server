@@ -3,6 +3,7 @@ package validators
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
@@ -10,10 +11,6 @@ import (
 	"Go-blog-server/internal/common"
 	"Go-blog-server/pkg/logging"
 )
-
-type IDForm struct {
-	ID int `form:"id" valid:"Required;Min(1)" json:"id"`
-}
 
 // BindAndValid binds and validates data
 func BindAndValid(c *gin.Context, form interface{}) (httpcode int, Err common.Err) {
@@ -35,6 +32,23 @@ func BindAndValid(c *gin.Context, form interface{}) (httpcode int, Err common.Er
 	}
 
 	return http.StatusOK, common.SUCCESS
+}
+
+// Bind Query ID and check
+func BindID(c *gin.Context) (httpcode int, Err common.Err, id int) {
+	id, err := strconv.Atoi(c.Param("id"))
+
+	fmt.Println(id, err)
+
+	httpcode = http.StatusOK
+	Err = common.SUCCESS
+
+	if err != nil || id <= 0 {
+		httpcode = http.StatusBadRequest
+		Err = common.ERROR_INVALID_PAMAMS
+	}
+
+	return
 }
 
 func MarkErrors(errors []*validation.Error) {

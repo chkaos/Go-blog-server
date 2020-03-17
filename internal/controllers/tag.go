@@ -31,8 +31,6 @@ func NewTagController() *TagController {
 // @Router /api/admin/tags [get]
 func (tc *TagController) GetTags(c *gin.Context) {
 
-	// pageNum, pageSize := utils.GetPaginationParams(c)
-	// fmt.Println(pageNum, pageSize)
 	var req models.QueryTagReq
 	err := c.Bind(&req)
 	fmt.Println(req)
@@ -109,21 +107,15 @@ func (tc *TagController) UpdateTag(c *gin.Context) {
 }
 
 func (tc *TagController) DeleteTag(c *gin.Context) {
-	var (
-		form validators.IDForm
-	)
 
-	// fmt.Println(c.PostForm("id"))
-	// fmt.Println(form)
-
-	httpCode, Err := validators.BindAndValid(c, &form)
+	httpCode, Err, id := validators.BindID(c)
 
 	if httpCode != e.SUCCESS {
 		common.WriteResponse(c, httpCode, common.Response{Err: Err})
 		return
 	}
 
-	resp, err := tc.service.DeleteTag(form.ID)
+	resp, err := tc.service.DeleteTag(id)
 	if err != nil {
 		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_DETELE_TAG_FAIL})
 		return

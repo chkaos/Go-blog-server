@@ -9,7 +9,7 @@ type Tag struct {
 	Desc       string     `json:"desc"`
 	Icon       string     `json:"icon"`
 	Articles   []*Article `gorm:"many2many:tag_relation;association_jointable_foreignkey:article_id;jointable_foreignkey:tag_id"`
-	ArticleNum int        `json:"article_num" sql:"-"`
+	ArticleNum int        `json:"article_num" sql:"-" default:"0"`
 }
 
 type TagRelation struct {
@@ -32,7 +32,7 @@ type TagResponse struct {
 	Name       string     `json:"name"`
 	Desc       string     `json:"desc,omitempty"`
 	Icon       string     `json:"icon"`
-	ArticleNum int        `json:"article_num,omitempty"`
+	ArticleNum int        `json:"article_num" default:"0"`
 }
 
 type TagsSerializer struct {

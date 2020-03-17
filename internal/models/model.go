@@ -11,13 +11,13 @@ type Model struct {
 
 // Pagination Pagination.
 type Pagination struct {
-	PageSize int `json:"page_size"`
-	PageNum  int `json:"page_num"`
+	PageSize int `json:"pageSize"`
+	PageNum  int `json:"pageNum"`
 }
 
 type PaginationRep struct {
-	PageSize int         `json:"page_size"`
-	PageNum  int         `json:"page_num"`
+	PageSize int         `json:"pageSize"`
+	PageNum  int         `json:"pageNum"`
 	Total    int         `json:"total"`
 	List     interface{} `json:"list,omitempty"`
 }
