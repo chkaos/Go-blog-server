@@ -33,7 +33,6 @@ func (tc *TagController) GetTags(c *gin.Context) {
 
 	var req models.QueryTagReq
 	err := c.Bind(&req)
-	fmt.Println(req)
 
 	resp, err := tc.service.QueryTagsReq(&req)
 	if err != nil {

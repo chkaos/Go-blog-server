@@ -33,6 +33,7 @@ func InitRouter() *gin.Engine {
 	{
 		apiAdmin.POST("/auth", uc.Auth)
 
+		apiAdmin.GET("/file", fc.GetFiles)
 		apiAdmin.POST("/file/upload", fc.Upload)
 
 		apiAdmin.GET("/tag", tc.GetTags)

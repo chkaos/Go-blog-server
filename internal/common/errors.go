@@ -53,6 +53,7 @@ var (
 
 	ERROR_ADD_FILE_SUCCESS = Err{Code: 0, Msg: "文件上传成功"}
 	ERROR_ADD_FILE_FAIL    = Err{Code: 10220, Msg: "文件上传失败"}
+	ERROR_GET_FILE_FAIL    = Err{Code: 10212, Msg: "获取文件失败"}
 
 	ERROR_AUTH       = Err{Code: 10300, Msg: "用户名或密码错误"}
 	ERROR_AUTH_TOKEN = Err{Code: 10301, Msg: "tokn生成失败"}

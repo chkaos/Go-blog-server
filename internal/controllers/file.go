@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"Go-blog-server/internal/common"
+	"Go-blog-server/internal/models"
 	"Go-blog-server/internal/services"
 )
 
@@ -36,4 +37,18 @@ func (fc *FileController) Upload(c *gin.Context) {
 
 	common.WriteResponseSuccess(c, resp)
 
+}
+
+func (tc *FileController) GetFiles(c *gin.Context) {
+
+	var req models.QueryFileReq
+	err := c.Bind(&req)
+
+	resp, err := tc.service.QueryFilesReq(&req)
+	if err != nil {
+		common.WriteResponse(c, http.StatusBadRequest, resp)
+		return
+	}
+
+	common.WriteResponseSuccess(c, resp)
 }

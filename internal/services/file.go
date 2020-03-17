@@ -78,6 +78,31 @@ func (f *FileService) UploadImg(header *multipart.FileHeader, file multipart.Fil
 
 }
 
+func (s *FileService) QueryFilesReq(req *models.QueryFileReq) (resp common.Response, err error) {
+	var (
+		total int
+		files []*models.File
+	)
+
+	if total, files, err = s.dao.QueryFiles(req); err != nil {
+		resp.Err = common.ERROR_GET_FILE_FAIL
+		return
+	}
+
+	filesSerializer := models.FilesSerializer{files}
+
+	rep := &models.PaginationRep{
+		Total:    total,
+		PageSize: req.PageSize,
+		PageNum:  req.PageNum,
+		List:     filesSerializer.Response(),
+	}
+
+	resp = common.Response{Err: common.SUCCESS, Data: rep}
+
+	return
+}
+
 func (f *FileService) NewOSSClient(conf *models.SysConf) (client *oss.Client, err error) {
 	var (
 		endpoint        = setting.EndPoint
