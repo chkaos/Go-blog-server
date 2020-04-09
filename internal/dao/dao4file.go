@@ -22,17 +22,17 @@ func (f *FileDAO) AddFile(file *models.File) error {
 }
 
 func (d *FileDAO) QueryFiles(req *models.QueryFileReq) (total int, Files []*models.File, err error) {
-	Db := d.db().Model(&models.File{}).Order("created_at desc")
+	db := d.db().Model(&models.File{}).Order("created_at desc")
 
-	if err = Db.Count(&total).Error; err != nil {
+	if err = db.Count(&total).Error; err != nil {
 		return
 	}
 
 	if req.PageNum > 0 && req.PageSize > 0 {
-		Db = Db.Offset((req.PageNum - 1) * req.PageSize).Limit(req.PageSize)
+		db = db.Offset((req.PageNum - 1) * req.PageSize).Limit(req.PageSize)
 	}
 
-	err = Db.Find(&Files).Error
+	err = db.Find(&Files).Error
 
 	return
 }

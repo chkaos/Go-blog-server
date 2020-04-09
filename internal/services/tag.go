@@ -94,7 +94,7 @@ func (s *TagService) UpdateTag(tag *models.Tag) (resp common.Response, err error
 		return
 	}
 
-	if err = s.dao.UptadeTag(tag); err != nil {
+	if err = s.dao.UpdateTag(tag); err != nil {
 		resp.Err = common.ErrorUpdateTagFail
 	} else {
 		resp.Err = common.SUCCESS

@@ -5,11 +5,10 @@ import "time"
 type Tag struct {
 	Model
 
-	Name       string    `json:"name"`
-	Desc       string    `json:"desc"`
-	Icon       string    `json:"icon"`
-	Articles   []Article `gorm:"many2many:tag_relation;association_jointable_foreignkey:article_id;jointable_foreignkey:tag_id"`
-	ArticleNum int       `json:"article_num" sql:"-" default:"0"`
+	Name     string    `json:"name"`
+	Desc     string    `json:"desc"`
+	Icon     string    `json:"icon"`
+	Articles []Article `gorm:"many2many:tag_relation;association_jointable_foreignkey:article_id;jointable_foreignkey:tag_id"`
 }
 
 type TagRelation struct {

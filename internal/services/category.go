@@ -94,7 +94,7 @@ func (s *CategoryService) UpdateCategory(Category *models.Category) (resp common
 		return
 	}
 
-	if err = s.dao.UptadeCategory(Category); err != nil {
+	if err = s.dao.UpdateCategory(Category); err != nil {
 		resp.Err = common.ErrorUpdateCategoryFail
 	} else {
 		resp.Err = common.SUCCESS

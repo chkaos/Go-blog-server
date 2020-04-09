@@ -55,22 +55,18 @@ func (ac *ArticleController) GetArticles(c *gin.Context) {
 }
 
 func (ac *ArticleController) AddArticle(c *gin.Context) {
-	var (
-		form    validators.AddArticleForm
-		article models.Article
-	)
+	var form validators.AddArticleForm
 
-	httpCode, Err := validators.BindAndValid(c, &form)
-
-	if httpCode != e.SUCCESS {
-		common.WriteResponse(c, httpCode, common.Response{Err: Err})
+	if httpCode, err := validators.BindAndValid(c, &form); httpCode != e.SUCCESS {
+		common.WriteResponse(c, httpCode, common.Response{Err: err})
 		return
 	}
 
-	article = form.Transform()
+	if article, err := form.Transform(); err != nil {
+		common.ResponseWithValidation()
+	}
 
-	resp, err := ac.service.AddArticle(&article)
-	if err != nil {
+	if resp, err := ac.service.AddArticle(&article); err != nil {
 		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorAddArticleFail})
 		return
 	}
@@ -81,24 +77,19 @@ func (ac *ArticleController) AddArticle(c *gin.Context) {
 
 func (ac *ArticleController) UpdateArticle(c *gin.Context) {
 
-	var (
-		form    validators.EditArticleForm
-		article models.Article
-	)
+	var form  validators.EditArticleForm
 
-	httpCode, Err := validators.BindAndValid(c, &form)
-
-	fmt.Println(form)
-
-	if httpCode != e.SUCCESS {
+	if httpCode, Err := validators.BindAndValid(c, &form); httpCode != e.SUCCESS {
 		common.WriteResponse(c, httpCode, common.Response{Err: Err})
 		return
 	}
 
-	article = form.Transform()
+	if article, err := form.Transform(); err != nil {
+		common.ResponseWithValidation()
+		return
+	}
 
-	resp, err := ac.service.UpdateArticle(&article)
-	if err != nil {
+	if resp, err := ac.service.UpdateArticle(&article); err != nil {
 		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorUpdateArticleFail})
 		return
 	}

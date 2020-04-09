@@ -59,5 +59,3 @@ func (f *FilesSerializer) Response() []FileResponse {
 func (SysConf) TableName() string {
 	return "system_config"
 }
-
-

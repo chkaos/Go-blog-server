@@ -22,7 +22,7 @@ func (d *CategoryDAO) AddCategory(Category *models.Category) error {
 	return d.db().Create(Category).Error
 }
 
-func (d *CategoryDAO) UptadeCategory(Category *models.Category) error {
+func (d *CategoryDAO) UpdateCategory(Category *models.Category) error {
 	return d.db().Model(&models.Category{}).Update(Category).Error
 }
 
@@ -60,17 +60,17 @@ func (d *CategoryDAO) DeleteCategory(id int) error {
 }
 
 func (d *CategoryDAO) QueryCategorys(req *models.QueryCategoryReq) (total int, Categorys []*models.Category, err error) {
-	Db := d.db().Preload("Articles").Model(&models.Category{})
+	db := d.db().Preload("Articles").Model(&models.Category{})
 
-	if err = Db.Count(&total).Error; err != nil {
+	if err = db.Count(&total).Error; err != nil {
 		return
 	}
 
 	if req.PageNum > 0 && req.PageSize > 0 {
-		Db = Db.Offset((req.PageNum - 1) * req.PageSize).Limit(req.PageSize)
+		db = db.Offset((req.PageNum - 1) * req.PageSize).Limit(req.PageSize)
 	}
 
-	err = Db.Find(&Categorys).Error
+	err = db.Find(&Categorys).Error
 
 	return
 }

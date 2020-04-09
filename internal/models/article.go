@@ -10,23 +10,23 @@ type Article struct {
 	Category        Category   `json:"category"`
 	Title           string     `json:"title"`
 	Desc            string     `json:"desc"`
-	Keywords        string     `json:"keywords`
+	Keywords        string     `json:"keywords"`
 	Content         string     `json:"content"`
 	RenderedContent string     `json:"rendered_content"`
-	Tags            []Tag      `gorm:"many2many:mapping-article-tag;association_jointable_foreignkey:tag_id;jointable_foreignkey:article_id"`
+	Tags            []Tag      `gorm:"many2many:tag_relation;association_jointable_foreignkey:tag_id;jointable_foreignkey:article_id"`
 	PublishedAt     *time.Time `json:"published_at"`
 	Source          int        `json:"source"`
 	ReproduceURL    string     `json:"reproduce_url"`
 	Thumb           string     `json:"thumb"`
-	LikesNum        int        `json:"like_num", gorm:"-"`
-	PvsNm           int        `json:"pvs_num", gorm:"-"`
-	CommentNum      int        `json:"comments_num", gorm:"-"`
+	LikesNum        int        `json:"like_num" gorm:"-"`
+	PvsNm           int        `json:"pvs_num" gorm:"-"`
+	CommentNum      int        `json:"comments_num" gorm:"-"`
 	State           int        `json:"state"`
 }
 
 type QueryArticleReq struct {
-	Tag      int
-	Category int
+	Tag      int `json:"tag"`
+	Category int `json:"category"`
 	Pagination
 }
 

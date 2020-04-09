@@ -18,21 +18,21 @@ func NewArticleService() *ArticleService {
 func (as *ArticleService) QueryArticlesReq(req *models.QueryArticleReq) (resp common.Response, err error) {
 	var (
 		total    int
-		Articles []*models.Article
+		articles []*models.Article
 	)
 
-	if total, Articles, err = as.dao.QueryArticles(req); err != nil {
+	if articles, total, err = as.dao.QueryArticles(req); err != nil {
 		resp.Err = common.ErrorGetArticleFail
 		return
 	}
 
-	ArticlesSerializer := models.ArticlesSerializer{Articles}
+	ArticlesSerializer := models.ArticlesSerializer{articles}
 
 	rep := &models.PaginationRep{
 		Total:    total,
 		PageSize: req.PageSize,
 		PageNum:  req.PageNum,
-		List:     ArticlesSerializer.Response(),
+		List:     ArticlesSerializer.PreviewResponse(),
 	}
 
 	resp = common.Response{Err: common.SUCCESS, Data: rep}
@@ -48,7 +48,6 @@ func (as *ArticleService) AddArticle(Article *models.Article) (resp common.Respo
 	ArticleModel, err = as.dao.QueryArticleByTitle(Article.Title)
 
 	if ArticleModel.ID > 0 {
-
 		resp.Err = common.ErrorArticleExist
 		return
 	}
@@ -71,12 +70,11 @@ func (as *ArticleService) UpdateArticle(Article *models.Article) (resp common.Re
 	ArticleModel, err = as.dao.QueryArticleByID(Article.ID)
 
 	if ArticleModel.ID == 0 {
-
 		resp.Err = common.ErrorArticleNotExist
 		return
 	}
 
-	if err = as.dao.UptadeArticle(Article); err != nil {
+	if err = as.dao.UpdateArticle(Article); err != nil {
 		resp.Err = common.ErrorUpdateArticleFail
 	} else {
 		resp.Err = common.SUCCESS
@@ -93,7 +91,6 @@ func (as *ArticleService) GetArticle(id int) (resp common.Response, err error) {
 	ArticleModel, err = as.dao.QueryArticleByID(id)
 
 	if ArticleModel.ID == 0 {
-
 		resp.Err = common.ErrorArticleNotExist
 		return
 	}
@@ -112,7 +109,6 @@ func (as *ArticleService) DeleteArticle(id int) (resp common.Response, err error
 	ArticleModel, err = as.dao.QueryArticleByID(id)
 
 	if ArticleModel.ID == 0 {
-
 		resp.Err = common.ErrorArticleNotExist
 		return
 	}

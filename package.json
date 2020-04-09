@@ -7,6 +7,7 @@
     "dev": "go run ./cmd/main.go",
     "test": "go test",
     "lint": "go fmt ./...",
+    "cz": "git add . && git cz",
     "precommit-msg": "echo 'Formating code...' && exit 0"
   },
   "repository": {
