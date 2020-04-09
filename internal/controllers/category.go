@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	_ "github.com/astaxie/beego/validation"
@@ -22,20 +21,10 @@ func NewCategoryController() *CategoryController {
 	return &CategoryController{services.NewCategoryService()}
 }
 
-// @Summary Get multiple article tags
-// @Produce  json
-// @Param PageNum query string false "PageNum"
-// @Param PageSize query int false "PageSize"
-// @Success 200 {object} app.Response
-// @Failure 500 {object} app.Response
-// @Router /api/admin/tags [get]
 func (tc *CategoryController) GetCategorys(c *gin.Context) {
 
-	// pageNum, pageSize := utils.GetPaginationParams(c)
-	// fmt.Println(pageNum, pageSize)
 	var req models.QueryCategoryReq
 	err := c.Bind(&req)
-	fmt.Println(req)
 
 	resp, err := tc.service.QueryCategorysReq(&req)
 	if err != nil {
@@ -58,8 +47,8 @@ func (tc *CategoryController) GetAllCategorys(c *gin.Context) {
 
 func (tc *CategoryController) AddCategory(c *gin.Context) {
 	var (
-		form validators.AddCategoryForm
-		tag  models.Category
+		form     validators.AddCategoryForm
+		category models.Category
 	)
 
 	httpCode, Err := validators.BindAndValid(c, &form)
@@ -69,11 +58,11 @@ func (tc *CategoryController) AddCategory(c *gin.Context) {
 		return
 	}
 
-	tag = form.Transform()
+	category = form.Transform()
 
-	resp, err := tc.service.AddCategory(&tag)
+	resp, err := tc.service.AddCategory(&category)
 	if err != nil {
-		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_ADD_TAG_FAIL})
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorAddTagFail})
 		return
 	}
 
@@ -84,24 +73,22 @@ func (tc *CategoryController) AddCategory(c *gin.Context) {
 func (tc *CategoryController) UpdateCategory(c *gin.Context) {
 
 	var (
-		form validators.EditCategoryForm
-		tag  models.Category
+		form     validators.EditCategoryForm
+		category models.Category
 	)
 
 	httpCode, Err := validators.BindAndValid(c, &form)
-
-	fmt.Println(form)
 
 	if httpCode != e.SUCCESS {
 		common.WriteResponse(c, httpCode, common.Response{Err: Err})
 		return
 	}
 
-	tag = form.Transform()
+	category = form.Transform()
 
-	resp, err := tc.service.UpdateCategory(&tag)
+	resp, err := tc.service.UpdateCategory(&category)
 	if err != nil {
-		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_UPDATE_TAG_FAIL})
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorUpdateTagFail})
 		return
 	}
 
@@ -119,7 +106,7 @@ func (tc *CategoryController) DeleteCategory(c *gin.Context) {
 
 	resp, err := tc.service.DeleteCategory(id)
 	if err != nil {
-		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_DETELE_TAG_FAIL})
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorDeleteTagFail})
 		return
 	}
 

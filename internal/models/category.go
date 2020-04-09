@@ -5,10 +5,9 @@ import "time"
 type Category struct {
 	Model
 
-	Name       string     `json:"name"`
-	Desc       string     `json:"desc"`
-	Articles   []*Article `gorm:"foreignkey:category_id"`
-	ArticleNum int        `json:"article_num" sql:"-" default:"0"`
+	Name     string     `json:"name"`
+	Desc     string     `json:"desc"`
+	Articles []*Article `gorm:"foreignkey:category_id"`
 }
 
 type QueryCategoryReq struct {

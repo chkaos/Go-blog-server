@@ -24,7 +24,7 @@ func WriteResponse(c *gin.Context, httpCode int, resp Response) {
 
 func ResponseWithValidation(c *gin.Context) {
 	c.JSON(http.StatusBadRequest, Response{
-		Err: ERROR_INVALID_PAMAMS,
+		Err: ErrorInvalidParams,
 	})
 }
 

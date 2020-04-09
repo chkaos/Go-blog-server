@@ -52,14 +52,14 @@ func (uc *UserController) Auth(c *gin.Context) {
 	fmt.Println(isExistError)
 	if isExistError != nil {
 		common.WriteResponse(c, http.StatusBadRequest, common.Response{
-			Err: common.ERROR_AUTH,
+			Err: common.ErrAuth,
 		})
 		return
 	}
 
 	token, err := utils.GenerateToken(int(user.ID), username, user.Role)
 	if err != nil {
-		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_AUTH_TOKEN})
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorAuthToken})
 		return
 	}
 

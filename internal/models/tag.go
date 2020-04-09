@@ -5,11 +5,11 @@ import "time"
 type Tag struct {
 	Model
 
-	Name       string     `json:"name"`
-	Desc       string     `json:"desc"`
-	Icon       string     `json:"icon"`
-	Articles   []*Article `gorm:"many2many:tag_relation;association_jointable_foreignkey:article_id;jointable_foreignkey:tag_id"`
-	ArticleNum int        `json:"article_num" sql:"-" default:"0"`
+	Name       string    `json:"name"`
+	Desc       string    `json:"desc"`
+	Icon       string    `json:"icon"`
+	Articles   []Article `gorm:"many2many:tag_relation;association_jointable_foreignkey:article_id;jointable_foreignkey:tag_id"`
+	ArticleNum int       `json:"article_num" sql:"-" default:"0"`
 }
 
 type TagRelation struct {
@@ -36,7 +36,7 @@ type TagResponse struct {
 }
 
 type TagsSerializer struct {
-	Tags []*Tag
+	Tags []Tag
 }
 
 func (t *Tag) Response() TagResponse {
@@ -77,7 +77,7 @@ func (s *TagsSerializer) PreviewResponse() []TagResponse {
 	return tags
 }
 
-func (Tag) TableName() string {
+func (*Tag) TableName() string {
 	return "tag"
 }
 

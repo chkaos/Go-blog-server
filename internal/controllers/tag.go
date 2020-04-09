@@ -70,7 +70,7 @@ func (tc *TagController) AddTag(c *gin.Context) {
 
 	resp, err := tc.service.AddTag(&tag)
 	if err != nil {
-		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_ADD_TAG_FAIL})
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorAddTagFail})
 		return
 	}
 
@@ -98,7 +98,7 @@ func (tc *TagController) UpdateTag(c *gin.Context) {
 
 	resp, err := tc.service.UpdateTag(&tag)
 	if err != nil {
-		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_UPDATE_TAG_FAIL})
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorUpdateTagFail})
 		return
 	}
 
@@ -116,7 +116,7 @@ func (tc *TagController) DeleteTag(c *gin.Context) {
 
 	resp, err := tc.service.DeleteTag(id)
 	if err != nil {
-		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ERROR_DETELE_TAG_FAIL})
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorDeleteTagFail})
 		return
 	}
 

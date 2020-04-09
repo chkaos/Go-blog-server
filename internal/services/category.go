@@ -23,7 +23,7 @@ func (s *CategoryService) QueryCategorysReq(req *models.QueryCategoryReq) (resp 
 	)
 
 	if total, Categorys, err = s.dao.QueryCategorys(req); err != nil {
-		resp.Err = common.ERROR_GET_CATEGORY_FAIL
+		resp.Err = common.ErrorGetCategoryFail
 		return
 	}
 
@@ -45,7 +45,7 @@ func (s *CategoryService) QueryAllCategorys() (resp common.Response, err error) 
 	var Categorys []*models.Category
 
 	if Categorys, err = s.dao.QueryAllCategorys(); err != nil {
-		resp.Err = common.ERROR_GET_CATEGORY_FAIL
+		resp.Err = common.ErrorGetCategoryFail
 		return
 	}
 
@@ -65,12 +65,12 @@ func (s *CategoryService) AddCategory(Category *models.Category) (resp common.Re
 
 	if CategoryModel.ID > 0 {
 
-		resp.Err = common.ERROR_CATEGORY_EXIST
+		resp.Err = common.ErrorCategoryExist
 		return
 	}
 
 	if err = s.dao.AddCategory(Category); err != nil {
-		resp.Err = common.ERROR_ADD_CATEGORY_FAIL
+		resp.Err = common.ErrorAddCategoryFail
 	} else {
 		resp.Err = common.SUCCESS
 		resp.Data = Category.PreviewResponse()
@@ -90,12 +90,12 @@ func (s *CategoryService) UpdateCategory(Category *models.Category) (resp common
 
 	if CategoryModel.ID == 0 {
 
-		resp.Err = common.ERROR_CATEGORY_NOT_EXIST
+		resp.Err = common.ErrorCategoryNotExist
 		return
 	}
 
 	if err = s.dao.UptadeCategory(Category); err != nil {
-		resp.Err = common.ERROR_UPDATE_CATEGORY_FAIL
+		resp.Err = common.ErrorUpdateCategoryFail
 	} else {
 		resp.Err = common.SUCCESS
 	}
@@ -111,13 +111,12 @@ func (s *CategoryService) DeleteCategory(id int) (resp common.Response, err erro
 	CategoryModel, err = s.dao.QueryCategoryByID(id)
 
 	if CategoryModel.ID == 0 {
-
-		resp.Err = common.ERROR_CATEGORY_NOT_EXIST
+		resp.Err = common.ErrorCategoryNotExist
 		return
 	}
 
 	if err = s.dao.DeleteCategory(id); err != nil {
-		resp.Err = common.ERROR_DETELE_CATEGORY_FAIL
+		resp.Err = common.ErrorDeleteCategoryFail
 	} else {
 		resp.Err = common.SUCCESS
 	}

@@ -17,7 +17,7 @@ func BindAndValid(c *gin.Context, form interface{}) (httpcode int, Err common.Er
 	err := c.Bind(form)
 
 	if err != nil {
-		return http.StatusBadRequest, common.ERROR_INVALID_PAMAMS
+		return http.StatusBadRequest, common.ErrorInvalidParams
 	}
 
 	valid := validation.Validation{}
@@ -28,7 +28,7 @@ func BindAndValid(c *gin.Context, form interface{}) (httpcode int, Err common.Er
 	}
 	if !check {
 		MarkErrors(valid.Errors)
-		return http.StatusBadRequest, common.ERROR_INVALID_PAMAMS
+		return http.StatusBadRequest, common.ErrorInvalidParams
 	}
 
 	return http.StatusOK, common.SUCCESS
@@ -45,7 +45,7 @@ func BindID(c *gin.Context) (httpcode int, Err common.Err, id int) {
 
 	if err != nil || id <= 0 {
 		httpcode = http.StatusBadRequest
-		Err = common.ERROR_INVALID_PAMAMS
+		Err = common.ErrorInvalidParams
 	}
 
 	return

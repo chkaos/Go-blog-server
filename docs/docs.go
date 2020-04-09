@@ -43,7 +43,7 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "",
 	Schemes:     []string{},
-	Title:       "Swagger Astella API",
+	Title:       "Swagger Chkaos API",
 	Description: "This is a sample server celler server.",
 }
 

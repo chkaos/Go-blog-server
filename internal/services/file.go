@@ -35,31 +35,31 @@ func (f *FileService) UploadImg(header *multipart.FileHeader, file multipart.Fil
 	content, err := ioutil.ReadAll(file)
 
 	if err != nil {
-		resp = common.Response{Err: common.ERROR_READ_FILE_FAIL}
+		resp = common.Response{Err: common.ErrorReadFileFail}
 		return
 	}
 
 	if conf, err = f.dao.GetOSSConf(); err != nil {
-		resp = common.Response{Err: common.ERROR_GET_OSS_CONF_FAIL}
+		resp = common.Response{Err: common.ErrorGetOssConfFail}
 		return
 	}
 
 	if client, err = f.NewOSSClient(conf); err != nil {
-		resp = common.Response{Err: common.ERROR_INIT_OSS_CLIENT_FAIL}
+		resp = common.Response{Err: common.ErrorInitOssClientFail}
 		return
 	}
 
 	bucket, err = client.Bucket(setting.BucketName)
 
 	if err != nil {
-		resp = common.Response{Err: common.ERROR_INIT_BUCKET_FAIL}
+		resp = common.Response{Err: common.ErrorInitBucketFail}
 	}
 
 	key := fmt.Sprintf("%d%s", time.Now().Unix(), header.Filename)
 	err = bucket.PutObject(key, bytes.NewReader(content))
 
 	if err != nil {
-		resp = common.Response{Err: common.ERROR_UPLOAD_OSS_FAIL}
+		resp = common.Response{Err: common.ErrorUploadOssFail}
 	}
 
 	url := fmt.Sprintf("%s%s", setting.SourceURL, key)
@@ -85,7 +85,7 @@ func (s *FileService) QueryFilesReq(req *models.QueryFileReq) (resp common.Respo
 	)
 
 	if total, files, err = s.dao.QueryFiles(req); err != nil {
-		resp.Err = common.ERROR_GET_FILE_FAIL
+		resp.Err = common.ErrorGetFileFali
 		return
 	}
 

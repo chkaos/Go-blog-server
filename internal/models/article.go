@@ -7,15 +7,14 @@ import (
 type Article struct {
 	Model
 
-	CategoryID      int        `json:"category_id"`
-	Category        Category   `json:"category";association_foreignkey:category_id`
+	Category        Category   `json:"category"`
 	Title           string     `json:"title"`
 	Desc            string     `json:"desc"`
-	Keywords        string     `json:keywords`
+	Keywords        string     `json:"keywords`
 	Content         string     `json:"content"`
 	RenderedContent string     `json:"rendered_content"`
-	Tags            []*Tag     `gorm:"many2many:mapping-article-tag;association_jointable_foreignkey:tag_id;jointable_foreignkey:article_id"`
-	Published_At    *time.Time `json:"published_at"`
+	Tags            []Tag      `gorm:"many2many:mapping-article-tag;association_jointable_foreignkey:tag_id;jointable_foreignkey:article_id"`
+	PublishedAt     *time.Time `json:"published_at"`
 	Source          int        `json:"source"`
 	ReproduceURL    string     `json:"reproduce_url"`
 	Thumb           string     `json:"thumb"`
@@ -25,19 +24,24 @@ type Article struct {
 	State           int        `json:"state"`
 }
 
+type QueryArticleReq struct {
+	Tag      int
+	Category int
+	Pagination
+}
+
 type ArticleResponse struct {
 	ID              int           `json:"id"`
 	CreatedAt       *time.Time    `json:"created_at,omitempty"`
 	ModifiedAt      *time.Time    `json:"modified_at,omitempty"`
-	CategoryID      int           `json:"category_id"`
 	Category        Category      `json:"category"`
 	Title           string        `json:"title"`
 	Desc            string        `json:"desc"`
-	Keywords        string        `json:keywords`
+	Keywords        string        `json:"keywords"`
 	Content         string        `json:"content"`
 	RenderedContent string        `json:"rendered_content"`
 	Tags            []TagResponse `json:"tags"`
-	Published_At    *time.Time    `json:"published_at"`
+	PublishedAt     *time.Time    `json:"published_at"`
 	Source          int           `json:"source"`
 	ReproduceURL    string        `json:"reproduce_url"`
 	Thumb           string        `json:"thumb"`
@@ -54,7 +58,7 @@ type ArticlesSerializer struct {
 func (a *Article) Response() ArticleResponse {
 	article := ArticleResponse{
 		ID:              a.ID,
-		CategoryID:      a.CategoryID,
+		Category:        a.Category,
 		Title:           a.Title,
 		Desc:            a.Desc,
 		Keywords:        a.Keywords,
@@ -62,7 +66,7 @@ func (a *Article) Response() ArticleResponse {
 		RenderedContent: a.RenderedContent,
 		CreatedAt:       a.CreatedAt,
 		ModifiedAt:      a.ModifiedAt,
-		Published_At:    a.Published_At,
+		PublishedAt:     a.PublishedAt,
 		Source:          a.Source,
 		ReproduceURL:    a.ReproduceURL,
 		Thumb:           a.Thumb,
@@ -77,10 +81,55 @@ func (a *Article) Response() ArticleResponse {
 	return article
 }
 
+func (a *Article) PreviewResponse() ArticleResponse {
+	article := ArticleResponse{
+		ID:         a.ID,
+		Category:   a.Category,
+		Title:      a.Title,
+		Desc:       a.Desc,
+		Keywords:   a.Keywords,
+		CreatedAt:  a.CreatedAt,
+		Source:     a.Source,
+		Thumb:      a.Thumb,
+		LikesNum:   a.LikesNum,
+		PvsNm:      a.PvsNm,
+		CommentNum: a.CommentNum,
+	}
+	serializer := TagsSerializer{Tags: a.Tags}
+	article.Tags = serializer.PreviewResponse()
+
+	return article
+}
+
+func (a *Article) EditResponse() ArticleResponse {
+	article := ArticleResponse{
+		ID:        a.ID,
+		Category:  a.Category,
+		Title:     a.Title,
+		Desc:      a.Desc,
+		Keywords:  a.Keywords,
+		CreatedAt: a.CreatedAt,
+		Source:    a.Source,
+		Thumb:     a.Thumb,
+	}
+	serializer := TagsSerializer{Tags: a.Tags}
+	article.Tags = serializer.PreviewResponse()
+
+	return article
+}
+
 func (s *ArticlesSerializer) Response() []ArticleResponse {
 	var articles []ArticleResponse
 	for _, article := range s.Articles {
 		articles = append(articles, article.Response())
+	}
+	return articles
+}
+
+func (s *ArticlesSerializer) PreviewResponse() []ArticleResponse {
+	var articles []ArticleResponse
+	for _, article := range s.Articles {
+		articles = append(articles, article.PreviewResponse())
 	}
 	return articles
 }

@@ -22,7 +22,7 @@ func (f *FileDAO) AddFile(file *models.File) error {
 }
 
 func (d *FileDAO) QueryFiles(req *models.QueryFileReq) (total int, Files []*models.File, err error) {
-	Db := d.db().Model(&models.File{})
+	Db := d.db().Model(&models.File{}).Order("created_at desc")
 
 	if err = Db.Count(&total).Error; err != nil {
 		return
