@@ -32,10 +32,10 @@ type EditArticleForm struct {
 	State        int    `form:"state" valid:"Required;Range(0,1)"`
 }
 
-func (a *AddArticleForm) Transform() (articleModel models.Article, err error ) {
+func (a *AddArticleForm) Transform() (articleModel models.Article, err error) {
 	var (
 		categoryModel models.Category
-		tagModels []models.Tag
+		tagModels     []models.Tag
 	)
 
 	categoryDao := dao.NewCategoryDAO()
@@ -70,7 +70,7 @@ func (a *AddArticleForm) Transform() (articleModel models.Article, err error ) {
 func (e *EditArticleForm) Transform() (articleModel models.Article, err error) {
 	var (
 		categoryModel models.Category
-		tagModels []models.Tag
+		tagModels     []models.Tag
 	)
 
 	categoryDao := dao.NewCategoryDAO()

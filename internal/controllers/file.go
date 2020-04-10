@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	_ "github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 
 	"Go-blog-server/internal/common"
@@ -19,8 +18,13 @@ func NewFileController() *FileController {
 	return &FileController{services.NewFileService()}
 }
 
+// @Summary 上传文件
+// @Produce  json
+// @Param file formData file true "File"
+// @Success 200 {object} common.Response
+// @Failure 500 {object} common.Response
+// @Router /api/admin/file/upload [post]
 func (fc *FileController) Upload(c *gin.Context) {
-
 	file, header, err := c.Request.FormFile("file")
 
 	if err != nil {
@@ -39,6 +43,13 @@ func (fc *FileController) Upload(c *gin.Context) {
 
 }
 
+// @Summary 分页获取文件资源
+// @Produce  json
+// @Param pageSize query int true "PageSize"
+// @Param pageNum query int true "PageNum"
+// @Success 200 {object} common.Response
+// @Failure 500 {object} common.Response
+// @Router /api/admin/file [get]
 func (tc *FileController) GetFiles(c *gin.Context) {
 
 	var req models.QueryFileReq

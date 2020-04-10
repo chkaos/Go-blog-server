@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	_ "github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 
 	"Go-blog-server/internal/common"
@@ -21,6 +20,12 @@ func NewArticleController() *ArticleController {
 	return &ArticleController{services.NewArticleService()}
 }
 
+// @Summary 获取文章详情
+// @Produce  json
+// @Param id path int true "ID"
+// @Success 200 {object} common.Response
+// @Failure 500 {object} common.Response
+// @Router /api/admin/article/{id} [get]
 func (ac *ArticleController) GetArticle(c *gin.Context) {
 
 	httpCode, Err, id := validators.BindID(c)
@@ -39,6 +44,15 @@ func (ac *ArticleController) GetArticle(c *gin.Context) {
 	common.WriteResponseSuccess(c, resp)
 }
 
+// @Summary 分页获取文章
+// @Produce  json
+// @Param pageSize query int true "PageSize"
+// @Param pageNum query int true "PageNum"
+// @Param tag query string "Tags"
+// @Param category query int "Category"
+// @Success 200 {object} common.Response
+// @Failure 500 {object} common.Response
+// @Router /api/admin/articles [get]
 func (ac *ArticleController) GetArticles(c *gin.Context) {
 
 	var req models.QueryArticleReq
@@ -53,6 +67,20 @@ func (ac *ArticleController) GetArticles(c *gin.Context) {
 	common.WriteResponseSuccess(c, resp)
 }
 
+// @Summary 添加文章
+// @Produce  json
+// @Param tagIds body int true "TagIDs"
+// @Param category body int true "Category"
+// @Param title body string true "Title"
+// @Param desc body string true "Desc"
+// @Param content body string true "Content"
+// @Param source body int true "Source"
+// @Param reproduceUrl body string "ReproduceURL"
+// @Param thumb body string true "Thumb"
+// @Param state body int true "State"
+// @Success 200 {object} common.Response
+// @Failure 500 {object} common.Response
+// @Router /api/admin/article [post]
 func (ac *ArticleController) AddArticle(c *gin.Context) {
 	var form validators.AddArticleForm
 
@@ -61,12 +89,12 @@ func (ac *ArticleController) AddArticle(c *gin.Context) {
 		return
 	}
 
-	article, err := form.Transform();
+	article, err := form.Transform()
 	if err != nil {
 		common.ResponseWithValidation(c)
 		return
 	}
-	
+
 	resp, err := ac.service.AddArticle(article)
 	if err != nil {
 		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorAddArticleFail})
@@ -77,6 +105,21 @@ func (ac *ArticleController) AddArticle(c *gin.Context) {
 
 }
 
+// @Summary 更新文章
+// @Produce  json
+// @Param id body int true "ID"
+// @Param tagIds body int true "TagIDs"
+// @Param category body int true "Category"
+// @Param title body string true "Title"
+// @Param desc body string true "Desc"
+// @Param content body string true "Content"
+// @Param source body int true "Source"
+// @Param reproduceUrl body string "ReproduceURL"
+// @Param thumb body string true "Thumb"
+// @Param state body int true "State"
+// @Success 200 {object} common.Response
+// @Failure 500 {object} common.Response
+// @Router /api/admin/article [put]
 func (ac *ArticleController) UpdateArticle(c *gin.Context) {
 
 	var form validators.EditArticleForm
@@ -86,12 +129,12 @@ func (ac *ArticleController) UpdateArticle(c *gin.Context) {
 		return
 	}
 
-	article, err := form.Transform();
+	article, err := form.Transform()
 	if err != nil {
 		common.ResponseWithValidation(c)
 		return
 	}
-	
+
 	resp, err := ac.service.UpdateArticle(article)
 	if err != nil {
 		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorUpdateArticleFail})
@@ -101,6 +144,12 @@ func (ac *ArticleController) UpdateArticle(c *gin.Context) {
 	common.WriteResponseSuccess(c, resp)
 }
 
+// @Summary 删除文章
+// @Produce  json
+// @Param id path int true "ID"
+// @Success 200 {object} common.Response
+// @Failure 500 {object} common.Response
+// @Router /api/admin/article/{id} [delete]
 func (ac *ArticleController) DeleteArticle(c *gin.Context) {
 
 	httpCode, Err, id := validators.BindID(c)

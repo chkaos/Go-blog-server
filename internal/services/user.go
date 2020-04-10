@@ -15,6 +15,6 @@ func NewUserService() *UserService {
 
 // Auth  auth login by username and password
 func (s *UserService) Auth(username, password string) (user models.User, err error) {
-	user, err = s.dao.QueryUser(&models.User{Username: username, Password: password})
+	user, err = s.dao.QueryUser(models.User{Username: username, Password: password})
 	return
 }

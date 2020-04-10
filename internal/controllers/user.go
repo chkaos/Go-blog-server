@@ -1,15 +1,14 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
-	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 
 	"Go-blog-server/internal/common"
-	"Go-blog-server/internal/models"
 	"Go-blog-server/internal/services"
+	"Go-blog-server/internal/validators"
+	"Go-blog-server/pkg/e"
 	"Go-blog-server/pkg/utils"
 )
 
@@ -21,7 +20,7 @@ func NewUserController() *UserController {
 	return &UserController{services.NewUserService()}
 }
 
-// @Summary Get Auth
+// @Summary 登录
 // @Produce  json
 // @Param username body string true "username"
 // @Param password body string true "password"
@@ -29,27 +28,16 @@ func NewUserController() *UserController {
 // @Failure 500 {object} app.Response
 // @Router /api/admin/auth [post]
 func (uc *UserController) Auth(c *gin.Context) {
-	valid := validation.Validation{}
 
-	var auth models.User
-	err := c.BindJSON(&auth)
-	fmt.Println(err)
-	username := auth.Username
-	password := auth.Password
+	var form validators.AuthForm
 
-	fmt.Println(auth)
-	valid.Required(auth.Username, "username")
-	valid.MinSize(auth.Password, 6, "password").Message("密码长度不得小于%d", 6)
-
-	ok, _ := valid.Valid(auth)
-	if !ok {
-		utils.MarkErrors(valid.Errors)
-		common.ResponseWithValidation(c)
+	if httpCode, Err := validators.BindAndValid(c, &form); httpCode != e.SUCCESS {
+		common.WriteResponse(c, httpCode, common.Response{Err: Err})
 		return
 	}
 
-	user, isExistError := uc.service.Auth(username, password)
-	fmt.Println(isExistError)
+	user, isExistError := uc.service.Auth(form.Username, form.Password)
+
 	if isExistError != nil {
 		common.WriteResponse(c, http.StatusBadRequest, common.Response{
 			Err: common.ErrAuth,
@@ -57,7 +45,7 @@ func (uc *UserController) Auth(c *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateToken(int(user.ID), username, user.Role)
+	token, err := utils.GenerateToken(int(user.ID), form.Username, user.Role)
 	if err != nil {
 		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorAuthToken})
 		return

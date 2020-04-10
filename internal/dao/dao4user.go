@@ -18,16 +18,10 @@ func (d *UserDAO) Add(user models.User) error {
 	return d.DB.Create(user).Error
 }
 
-// func (d *UserDAO) AuthUser(username string, password string) (user *models.User, err error) {
-// 	user = &models.User{}
-// 	fmt.Println(user)
-// 	err = d.db().Where("username=? AND password=?", username, password).First(user).Error
-// 	return
-// }
-
-func (d *UserDAO) QueryUser(u *models.User) (user models.User, err error) {
+//
+func (d *UserDAO) QueryUser(u models.User) (user models.User, err error) {
 	user = models.User{}
-	err = d.db().Where(u).First(user).Error
+	err = d.db().Where(&u).First(user).Error
 	return
 }
 
@@ -41,6 +35,6 @@ func (d *UserDAO) QueryUserByUserName(userName string) (rows *models.User, err e
 }
 
 // UpdateUser update user info
-func (d *UserDAO) Update(user *models.User) error {
+func (d *UserDAO) Update(user models.User) error {
 	return d.DB.Model(&models.User{}).Update(user).Where("ID=?", user.ID).Error
 }
