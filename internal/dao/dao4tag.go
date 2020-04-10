@@ -19,24 +19,24 @@ func NewTagDAO() *TagDAO {
 }
 
 // AddTag  add new tag
-func (d *TagDAO) AddTag(tag *models.Tag) error {
+func (d *TagDAO) AddTag(tag models.Tag) error {
 	return d.db().Create(tag).Error
 }
 
 // UpdateTag  update tag
-func (d *TagDAO) UpdateTag(tag *models.Tag) error {
+func (d *TagDAO) UpdateTag(tag models.Tag) error {
 	return d.db().Model(&models.Tag{}).Update(tag).Error
 }
 
 // Querytags  query all tags
-func (d *TagDAO) QueryAllTags() (tags []*models.Tag, err error) {
+func (d *TagDAO) QueryAllTags() (tags []models.Tag, err error) {
 	err = d.db().Find(&tags).Error
 	return
 }
 
 // QueryTag query tag by tag name
-func (d *TagDAO) QueryTagByName(name string) (tag *models.Tag, err error) {
-	tag = &models.Tag{}
+func (d *TagDAO) QueryTagByName(name string) (tag models.Tag, err error) {
+	tag = models.Tag{}
 	if err = d.db().Where("name = ?", name).First(&tag).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			err = nil
@@ -46,8 +46,8 @@ func (d *TagDAO) QueryTagByName(name string) (tag *models.Tag, err error) {
 }
 
 // QueryTag query tag by tag id
-func (d *TagDAO) QueryTagByID(id int) (tag *models.Tag, err error) {
-	tag = &models.Tag{}
+func (d *TagDAO) QueryTagByID(id int) (tag models.Tag, err error) {
+	tag = models.Tag{}
 	if err = d.db().Where("id = ?", id).First(&tag).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			err = nil
@@ -62,7 +62,7 @@ func (d *TagDAO) DeleteTag(id int) error {
 }
 
 // QueryTags query tags by condition
-func (d *TagDAO) QueryTags(req *models.QueryTagReq) (total int, tags []*models.Tag, err error) {
+func (d *TagDAO) QueryTags(req *models.QueryTagReq) (total int, tags []models.Tag, err error) {
 	db := d.db().Preload("Articles").Model(&models.Tag{})
 
 	if req.Name != "" {
@@ -85,7 +85,7 @@ func (d *TagDAO) QueryTags(req *models.QueryTagReq) (total int, tags []*models.T
 
 // SetTags set article-tag-relation
 func (d *TagDAO) SetTags(tagIds []int) (tags []models.Tag, err error) {
-	err = db.Where(tagIds).Find(&tags).Error
+	err = d.db().Where(tagIds).Find(&tags).Error
 
 	return
 }

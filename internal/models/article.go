@@ -52,7 +52,7 @@ type ArticleResponse struct {
 }
 
 type ArticlesSerializer struct {
-	Articles []*Article
+	Articles []Article
 }
 
 func (a *Article) Response() ArticleResponse {

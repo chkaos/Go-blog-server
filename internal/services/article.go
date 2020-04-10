@@ -11,14 +11,14 @@ type ArticleService struct {
 }
 
 func NewArticleService() *ArticleService {
-	return &ArticleService{dao: new(dao.ArticleDAO)}
+	return &ArticleService{dao: dao.NewArticleDAO()}
 }
 
 // QueryArticles
 func (as *ArticleService) QueryArticlesReq(req *models.QueryArticleReq) (resp common.Response, err error) {
 	var (
 		total    int
-		articles []*models.Article
+		articles []models.Article
 	)
 
 	if articles, total, err = as.dao.QueryArticles(req); err != nil {
@@ -40,14 +40,14 @@ func (as *ArticleService) QueryArticlesReq(req *models.QueryArticleReq) (resp co
 	return
 }
 
-func (as *ArticleService) AddArticle(Article *models.Article) (resp common.Response, err error) {
+func (as *ArticleService) AddArticle(Article models.Article) (resp common.Response, err error) {
 
 	var (
-		ArticleModel *models.Article
+		articleModel models.Article
 	)
-	ArticleModel, err = as.dao.QueryArticleByTitle(Article.Title)
+	articleModel, err = as.dao.QueryArticleByTitle(Article.Title)
 
-	if ArticleModel.ID > 0 {
+	if articleModel.ID > 0 {
 		resp.Err = common.ErrorArticleExist
 		return
 	}
@@ -62,14 +62,14 @@ func (as *ArticleService) AddArticle(Article *models.Article) (resp common.Respo
 	return
 }
 
-func (as *ArticleService) UpdateArticle(Article *models.Article) (resp common.Response, err error) {
+func (as *ArticleService) UpdateArticle(Article models.Article) (resp common.Response, err error) {
 
 	var (
-		ArticleModel *models.Article
+		articleModel models.Article
 	)
-	ArticleModel, err = as.dao.QueryArticleByID(Article.ID)
+	articleModel, err = as.dao.QueryArticleByID(Article.ID)
 
-	if ArticleModel.ID == 0 {
+	if articleModel.ID == 0 {
 		resp.Err = common.ErrorArticleNotExist
 		return
 	}
@@ -86,16 +86,16 @@ func (as *ArticleService) UpdateArticle(Article *models.Article) (resp common.Re
 func (as *ArticleService) GetArticle(id int) (resp common.Response, err error) {
 
 	var (
-		ArticleModel *models.Article
+		articleModel models.Article
 	)
-	ArticleModel, err = as.dao.QueryArticleByID(id)
+	articleModel, err = as.dao.QueryArticleByID(id)
 
-	if ArticleModel.ID == 0 {
+	if articleModel.ID == 0 {
 		resp.Err = common.ErrorArticleNotExist
 		return
 	}
 
-	resp.Data = ArticleModel.EditResponse()
+	resp.Data = articleModel.EditResponse()
 	resp.Err = common.SUCCESS
 
 	return
@@ -104,11 +104,11 @@ func (as *ArticleService) GetArticle(id int) (resp common.Response, err error) {
 func (as *ArticleService) DeleteArticle(id int) (resp common.Response, err error) {
 
 	var (
-		ArticleModel *models.Article
+		articleModel models.Article
 	)
-	ArticleModel, err = as.dao.QueryArticleByID(id)
+	articleModel, err = as.dao.QueryArticleByID(id)
 
-	if ArticleModel.ID == 0 {
+	if articleModel.ID == 0 {
 		resp.Err = common.ErrorArticleNotExist
 		return
 	}

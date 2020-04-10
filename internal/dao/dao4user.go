@@ -14,7 +14,7 @@ func NewUserDAO() *UserDAO {
 }
 
 // AddUser add user by user object
-func (d *UserDAO) Add(user *models.User) error {
+func (d *UserDAO) Add(user models.User) error {
 	return d.DB.Create(user).Error
 }
 
@@ -25,8 +25,8 @@ func (d *UserDAO) Add(user *models.User) error {
 // 	return
 // }
 
-func (d *UserDAO) QueryUser(u *models.User) (user *models.User, err error) {
-	user = &models.User{}
+func (d *UserDAO) QueryUser(u *models.User) (user models.User, err error) {
+	user = models.User{}
 	err = d.db().Where(u).First(user).Error
 	return
 }

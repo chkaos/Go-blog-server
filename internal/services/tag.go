@@ -12,14 +12,14 @@ type TagService struct {
 }
 
 func NewTagService() *TagService {
-	return &TagService{dao: new(dao.TagDAO)}
+	return &TagService{dao: dao.NewTagDAO()}
 }
 
 // QueryTags
 func (s *TagService) QueryTagsReq(req *models.QueryTagReq) (resp common.Response, err error) {
 	var (
 		total int
-		tags  []*models.Tag
+		tags  []models.Tag
 	)
 
 	if total, tags, err = s.dao.QueryTags(req); err != nil {
@@ -42,7 +42,7 @@ func (s *TagService) QueryTagsReq(req *models.QueryTagReq) (resp common.Response
 }
 
 func (s *TagService) QueryAllTags() (resp common.Response, err error) {
-	var tags []*models.Tag
+	var tags []models.Tag
 
 	if tags, err = s.dao.QueryAllTags(); err != nil {
 		resp.Err = common.ErrorGetTagFail
@@ -56,10 +56,10 @@ func (s *TagService) QueryAllTags() (resp common.Response, err error) {
 	return
 }
 
-func (s *TagService) AddTag(tag *models.Tag) (resp common.Response, err error) {
+func (s *TagService) AddTag(tag models.Tag) (resp common.Response, err error) {
 
 	var (
-		tagModel *models.Tag
+		tagModel models.Tag
 	)
 	tagModel, err = s.dao.QueryTagByName(tag.Name)
 
@@ -79,10 +79,10 @@ func (s *TagService) AddTag(tag *models.Tag) (resp common.Response, err error) {
 	return
 }
 
-func (s *TagService) UpdateTag(tag *models.Tag) (resp common.Response, err error) {
+func (s *TagService) UpdateTag(tag models.Tag) (resp common.Response, err error) {
 
 	var (
-		tagModel *models.Tag
+		tagModel models.Tag
 	)
 	tagModel, err = s.dao.QueryTagByID(tag.ID)
 
@@ -106,7 +106,7 @@ func (s *TagService) UpdateTag(tag *models.Tag) (resp common.Response, err error
 func (s *TagService) DeleteTag(id int) (resp common.Response, err error) {
 
 	var (
-		tagModel *models.Tag
+		tagModel models.Tag
 	)
 	tagModel, err = s.dao.QueryTagByID(id)
 

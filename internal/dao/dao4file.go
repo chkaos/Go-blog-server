@@ -11,17 +11,17 @@ func NewFileDAO() *FileDAO {
 	return &FileDAO{}
 }
 
-func (f *FileDAO) GetOSSConf() (conf *models.SysConf, err error) {
-	conf = &models.SysConf{}
+func (f *FileDAO) GetOSSConf() (conf models.SysConf, err error) {
+	conf = models.SysConf{}
 	err = f.db().Where("id = ?", 1).First(&conf).Error
 	return
 }
 
-func (f *FileDAO) AddFile(file *models.File) error {
+func (f *FileDAO) AddFile(file models.File) error {
 	return f.db().Create(file).Error
 }
 
-func (d *FileDAO) QueryFiles(req *models.QueryFileReq) (total int, Files []*models.File, err error) {
+func (d *FileDAO) QueryFiles(req *models.QueryFileReq) (total int, Files []models.File, err error) {
 	db := d.db().Model(&models.File{}).Order("created_at desc")
 
 	if err = db.Count(&total).Error; err != nil {

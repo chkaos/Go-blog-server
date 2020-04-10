@@ -34,11 +34,12 @@ type EditArticleForm struct {
 
 func (a *AddArticleForm) Transform() (articleModel models.Article, err error ) {
 	var (
-		categoryDao dao.CategoryDao
-		tagDao dao.TagDao
 		categoryModel models.Category
 		tagModels []models.Tag
 	)
+
+	categoryDao := dao.NewCategoryDAO()
+	tagDao := dao.NewTagDAO()
 
 	articleModel = models.Article{
 		Title:        a.Title,
@@ -66,16 +67,16 @@ func (a *AddArticleForm) Transform() (articleModel models.Article, err error ) {
 	return
 }
 
-func (e *EditArticleForm) Transform() (articleModel models.Article err error) {
+func (e *EditArticleForm) Transform() (articleModel models.Article, err error) {
 	var (
-		categoryDao dao.CategoryDao
-		tagDao dao.TagDao
 		categoryModel models.Category
 		tagModels []models.Tag
 	)
 
+	categoryDao := dao.NewCategoryDAO()
+	tagDao := dao.NewTagDAO()
+
 	articleModel = models.Article{
-		ID:           e.ID,
 		Title:        e.Title,
 		Desc:         e.Desc,
 		Keywords:     e.Keywords,
@@ -85,6 +86,7 @@ func (e *EditArticleForm) Transform() (articleModel models.Article err error) {
 		Thumb:        e.Thumb,
 		State:        e.State,
 	}
+	articleModel.ID = e.ID
 
 	if categoryModel, err = categoryDao.QueryCategoryByID(e.CategoryID); err != nil {
 		return

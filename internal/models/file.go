@@ -32,7 +32,7 @@ type FileResponse struct {
 }
 
 type FilesSerializer struct {
-	Files []*File
+	Files []File
 }
 
 func (f *File) Response() FileResponse {

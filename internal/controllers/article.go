@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	_ "github.com/astaxie/beego/validation"
@@ -62,11 +61,14 @@ func (ac *ArticleController) AddArticle(c *gin.Context) {
 		return
 	}
 
-	if article, err := form.Transform(); err != nil {
-		common.ResponseWithValidation()
+	article, err := form.Transform();
+	if err != nil {
+		common.ResponseWithValidation(c)
+		return
 	}
-
-	if resp, err := ac.service.AddArticle(&article); err != nil {
+	
+	resp, err := ac.service.AddArticle(article)
+	if err != nil {
 		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorAddArticleFail})
 		return
 	}
@@ -77,19 +79,21 @@ func (ac *ArticleController) AddArticle(c *gin.Context) {
 
 func (ac *ArticleController) UpdateArticle(c *gin.Context) {
 
-	var form  validators.EditArticleForm
+	var form validators.EditArticleForm
 
 	if httpCode, Err := validators.BindAndValid(c, &form); httpCode != e.SUCCESS {
 		common.WriteResponse(c, httpCode, common.Response{Err: Err})
 		return
 	}
 
-	if article, err := form.Transform(); err != nil {
-		common.ResponseWithValidation()
+	article, err := form.Transform();
+	if err != nil {
+		common.ResponseWithValidation(c)
 		return
 	}
-
-	if resp, err := ac.service.UpdateArticle(&article); err != nil {
+	
+	resp, err := ac.service.UpdateArticle(article)
+	if err != nil {
 		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorUpdateArticleFail})
 		return
 	}

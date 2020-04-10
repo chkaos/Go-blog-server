@@ -21,13 +21,13 @@ type FileService struct {
 }
 
 func NewFileService() *FileService {
-	return &FileService{dao: new(dao.FileDAO)}
+	return &FileService{dao: dao.NewFileDAO()}
 }
 
 // QueryFiles
 func (f *FileService) UploadImg(header *multipart.FileHeader, file multipart.File) (resp common.Response, err error) {
 	var (
-		conf   *models.SysConf
+		conf   models.SysConf
 		client *oss.Client
 		bucket *oss.Bucket
 	)
@@ -44,7 +44,7 @@ func (f *FileService) UploadImg(header *multipart.FileHeader, file multipart.Fil
 		return
 	}
 
-	if client, err = f.NewOSSClient(conf); err != nil {
+	if client, err = f.NewOSSClient(&conf); err != nil {
 		resp = common.Response{Err: common.ErrorInitOssClientFail}
 		return
 	}
@@ -64,7 +64,7 @@ func (f *FileService) UploadImg(header *multipart.FileHeader, file multipart.Fil
 
 	url := fmt.Sprintf("%s%s", setting.SourceURL, key)
 
-	fileModel := &models.File{
+	fileModel := models.File{
 		FileName: key,
 		Size:     int(header.Size),
 		URL:      url,
@@ -81,11 +81,11 @@ func (f *FileService) UploadImg(header *multipart.FileHeader, file multipart.Fil
 func (s *FileService) QueryFilesReq(req *models.QueryFileReq) (resp common.Response, err error) {
 	var (
 		total int
-		files []*models.File
+		files []models.File
 	)
 
 	if total, files, err = s.dao.QueryFiles(req); err != nil {
-		resp.Err = common.ErrorGetFileFali
+		resp.Err = common.ErrorGetFileFail
 		return
 	}
 

@@ -24,7 +24,7 @@ type CategoryResponse struct {
 }
 
 type CategorysSerializer struct {
-	Categorys []*Category
+	Categorys []Category
 }
 
 func (t *Category) Response() CategoryResponse {

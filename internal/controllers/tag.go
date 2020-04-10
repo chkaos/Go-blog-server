@@ -68,7 +68,7 @@ func (tc *TagController) AddTag(c *gin.Context) {
 
 	tag = form.Transform()
 
-	resp, err := tc.service.AddTag(&tag)
+	resp, err := tc.service.AddTag(tag)
 	if err != nil {
 		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorAddTagFail})
 		return
@@ -96,7 +96,7 @@ func (tc *TagController) UpdateTag(c *gin.Context) {
 
 	tag = form.Transform()
 
-	resp, err := tc.service.UpdateTag(&tag)
+	resp, err := tc.service.UpdateTag(tag)
 	if err != nil {
 		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorUpdateTagFail})
 		return

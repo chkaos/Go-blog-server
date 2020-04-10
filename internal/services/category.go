@@ -12,22 +12,22 @@ type CategoryService struct {
 }
 
 func NewCategoryService() *CategoryService {
-	return &CategoryService{dao: new(dao.CategoryDAO)}
+	return &CategoryService{dao: dao.NewCategoryDAO()}
 }
 
 // QueryCategorys
 func (s *CategoryService) QueryCategorysReq(req *models.QueryCategoryReq) (resp common.Response, err error) {
 	var (
 		total     int
-		Categorys []*models.Category
+		categorys []models.Category
 	)
 
-	if total, Categorys, err = s.dao.QueryCategorys(req); err != nil {
+	if total, categorys, err = s.dao.QueryCategorys(req); err != nil {
 		resp.Err = common.ErrorGetCategoryFail
 		return
 	}
 
-	CategorysSerializer := models.CategorysSerializer{Categorys}
+	CategorysSerializer := models.CategorysSerializer{categorys}
 
 	rep := &models.PaginationRep{
 		Total:    total,
@@ -42,7 +42,7 @@ func (s *CategoryService) QueryCategorysReq(req *models.QueryCategoryReq) (resp 
 }
 
 func (s *CategoryService) QueryAllCategorys() (resp common.Response, err error) {
-	var Categorys []*models.Category
+	var Categorys []models.Category
 
 	if Categorys, err = s.dao.QueryAllCategorys(); err != nil {
 		resp.Err = common.ErrorGetCategoryFail
@@ -59,7 +59,7 @@ func (s *CategoryService) QueryAllCategorys() (resp common.Response, err error) 
 func (s *CategoryService) AddCategory(Category *models.Category) (resp common.Response, err error) {
 
 	var (
-		CategoryModel *models.Category
+		CategoryModel models.Category
 	)
 	CategoryModel, err = s.dao.QueryCategoryByName(Category.Name)
 
@@ -82,7 +82,7 @@ func (s *CategoryService) AddCategory(Category *models.Category) (resp common.Re
 func (s *CategoryService) UpdateCategory(Category *models.Category) (resp common.Response, err error) {
 
 	var (
-		CategoryModel *models.Category
+		CategoryModel models.Category
 	)
 	CategoryModel, err = s.dao.QueryCategoryByID(Category.ID)
 
@@ -106,7 +106,7 @@ func (s *CategoryService) UpdateCategory(Category *models.Category) (resp common
 func (s *CategoryService) DeleteCategory(id int) (resp common.Response, err error) {
 
 	var (
-		CategoryModel *models.Category
+		CategoryModel models.Category
 	)
 	CategoryModel, err = s.dao.QueryCategoryByID(id)
 
