@@ -17,14 +17,14 @@ func NewArticleDAO() *ArticleDAO {
 
 // AddArticle add new Article
 func (a *ArticleDAO) AddArticle(article models.Article) error {
-	return a.db().Create(article).Error
+	return a.db().Create(&article).Error
 }
 
 // UpdateArticle update Article
 func (a *ArticleDAO) UpdateArticle(article models.Article) error {
 	db := a.db()
 	tx := db.Begin()
-	tx.Model(&article).Update(article)
+	tx.Model(&article).Update(&article)
 	tx.Model(&article).Association("Tag").Replace(article.Tags)
 	err := tx.Commit().Error
 	return err
@@ -32,30 +32,22 @@ func (a *ArticleDAO) UpdateArticle(article models.Article) error {
 
 // QueryArticle query Article by Article title
 func (a *ArticleDAO) QueryArticleByTitle(title string) (article models.Article, err error) {
-	article, err = a.FindOneArticle(struct {
-		title string
-	}{
-		title: title,
-	})
+	article, err = a.FindOneArticle("title = ?", title)
 	return
 }
 
 // QueryArticle query an Article by Article id
 func (a *ArticleDAO) QueryArticleByID(id int) (article models.Article, err error) {
-	article, err = a.FindOneArticle(struct {
-		id int
-	}{
-		id: id,
-	})
+	article, err = a.FindOneArticle("id = ?", id)
 	return
 }
 
 // FindOneArticle query an Article by condition
-func (a *ArticleDAO) FindOneArticle(condition interface{}) (model models.Article, err error) {
+func (a *ArticleDAO) FindOneArticle(condition ...interface{}) (model models.Article, err error) {
 	db := a.db()
 	tx := db.Begin()
 	tx.Where(condition).First(&model)
-	tx.Model(&model).Related(&model.Category, "Category")
+	tx.Model(&model).Related(&model.Category, "CategoryID")
 	tx.Model(&model).Related(&model.Tags, "Tags")
 	err = tx.Commit().Error
 	return

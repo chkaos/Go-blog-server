@@ -51,7 +51,7 @@ var (
 	ErrorUpdateCategoryFail = Err{Code: 10215, Msg: "分类更新失败"}
 
 	ErrorAddFileSuccess = Err{Code: 0, Msg: "文件上传成功"}
-	ErrorAddFileFail    = Err{Code: 10220, Msg: "文件上传失败"}
+	ErrorAddFileFail    = Err{Code: 10220, Msg: "文件添加失败"}
 	ErrorGetFileFail    = Err{Code: 10212, Msg: "获取文件失败"}
 
 	ErrorAddArticleSuccess = Err{Code: 0, Msg: "文章添加成功"}

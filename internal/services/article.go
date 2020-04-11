@@ -40,6 +40,7 @@ func (as *ArticleService) QueryArticlesReq(req *models.QueryArticleReq) (resp co
 	return
 }
 
+// AddArticle
 func (as *ArticleService) AddArticle(Article models.Article) (resp common.Response, err error) {
 
 	var (

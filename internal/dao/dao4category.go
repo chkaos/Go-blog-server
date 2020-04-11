@@ -18,24 +18,23 @@ func NewCategoryDAO() *CategoryDAO {
 }
 
 // AddCategory  add new Category
-func (d *CategoryDAO) AddCategory(Category *models.Category) error {
-	return d.db().Create(Category).Error
+func (d *CategoryDAO) AddCategory(category models.Category) error {
+	return d.db().Create(&category).Error
 }
 
-func (d *CategoryDAO) UpdateCategory(Category *models.Category) error {
-	return d.db().Model(&models.Category{}).Update(Category).Error
+func (d *CategoryDAO) UpdateCategory(category models.Category) error {
+	return d.db().Model(&category).Update(&category).Error
 }
 
 // QueryCategorys  query all Categorys
-func (d *CategoryDAO) QueryAllCategorys() (Categorys []models.Category, err error) {
-	err = d.db().Find(&Categorys).Error
+func (d *CategoryDAO) QueryAllCategorys() (categorys []models.Category, err error) {
+	err = d.db().Find(&categorys).Error
 	return
 }
 
 // QueryCategory query Category by Category name
-func (d *CategoryDAO) QueryCategoryByName(name string) (Category models.Category, err error) {
-	Category = models.Category{}
-	if err = d.db().Where("name = ?", name).First(&Category).Error; err != nil {
+func (d *CategoryDAO) QueryCategoryByName(name string) (category models.Category, err error) {
+	if err = d.db().Where("name = ?", name).First(&category).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			err = nil
 		}
@@ -44,9 +43,8 @@ func (d *CategoryDAO) QueryCategoryByName(name string) (Category models.Category
 }
 
 // QueryCategory query Category by Category id
-func (d *CategoryDAO) QueryCategoryByID(id int) (Category models.Category, err error) {
-	Category = models.Category{}
-	if err = d.db().Where("id = ?", id).First(&Category).Error; err != nil {
+func (d *CategoryDAO) QueryCategoryByID(id int) (category models.Category, err error) {
+	if err = d.db().Where("id = ?", id).First(&category).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			err = nil
 		}

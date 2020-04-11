@@ -2,7 +2,7 @@ CREATE TABLE `tag` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT '' COMMENT '标签名称',
   `desc` varchar(100) DEFAULT '' COMMENT '标签描述',
-  `icon` varchar(100) DEFAULT '' COMMENT '标签对应图标名称',
+  `slug` varchar(100) DEFAULT '' COMMENT '标签对应图标名称',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `deleted_at` timestamp DEFAULT null COMMENT '删除时间',
@@ -100,7 +100,7 @@ CREATE TABLE `comment-parent-child` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评论父子表';
 
-INSERT INTO `tag` (`name`, `icon`, `desc`) VALUES ('vue', 'icon-vue', 'Vue (读音 /vjuː/，类似于 view) 是一套用于构建用户界面的渐进式框架'), ('react', 'icon-react', '用于构建用户界面的JavaScript库');
+INSERT INTO `tag` (`name`, `slug`, `desc`) VALUES ('vue', 'icon-vue', 'Vue (读音 /vjuː/，类似于 view) 是一套用于构建用户界面的渐进式框架'), ('react', 'icon-react', '用于构建用户界面的JavaScript库');
 INSERT INTO `category` (`name`, `desc`) VALUES ('code', '代码'), ('lefe', '生活');
 INSERT INTO `article` (`category_id`, `title`, `desc`, `keywords`, `content`, `rendered_content`) VALUES (1, '测试文章', '这是一篇测试文章', '额。。', '渲染前的内容啊', '<div>选然后的内容额</div>');
 INSERT INTO `article-tag-map` (`article_id`, `tag_id`) VALUES (1, 1), (1, 2);

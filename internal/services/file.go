@@ -72,7 +72,11 @@ func (f *FileService) UploadImg(header *multipart.FileHeader, file multipart.Fil
 	}
 	err = f.dao.AddFile(fileModel)
 
-	resp = common.Response{Err: common.SUCCESS, Data: url}
+	if err != nil {
+		resp = common.Response{Err: common.ErrorAddFileFail}
+	} else {
+		resp = common.Response{Err: common.SUCCESS, Data: url}
+	}
 
 	return
 

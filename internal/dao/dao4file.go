@@ -18,7 +18,7 @@ func (f *FileDAO) GetOSSConf() (conf models.SysConf, err error) {
 }
 
 func (f *FileDAO) AddFile(file models.File) error {
-	return f.db().Create(file).Error
+	return f.db().Create(&file).Error
 }
 
 func (d *FileDAO) QueryFiles(req *models.QueryFileReq) (total int, Files []models.File, err error) {

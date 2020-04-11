@@ -56,7 +56,7 @@ func (s *CategoryService) QueryAllCategorys() (resp common.Response, err error) 
 	return
 }
 
-func (s *CategoryService) AddCategory(Category *models.Category) (resp common.Response, err error) {
+func (s *CategoryService) AddCategory(Category models.Category) (resp common.Response, err error) {
 
 	var (
 		CategoryModel models.Category
@@ -79,7 +79,7 @@ func (s *CategoryService) AddCategory(Category *models.Category) (resp common.Re
 	return
 }
 
-func (s *CategoryService) UpdateCategory(Category *models.Category) (resp common.Response, err error) {
+func (s *CategoryService) UpdateCategory(Category models.Category) (resp common.Response, err error) {
 
 	var (
 		CategoryModel models.Category

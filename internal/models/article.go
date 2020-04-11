@@ -7,7 +7,8 @@ import (
 type Article struct {
 	Model
 
-	Category        Category   `json:"category"`
+	CategoryID      int        `json:"category" gorm:"-"`
+	Category        Category   `json:"category" gorm:"-"`
 	Title           string     `json:"title"`
 	Desc            string     `json:"desc"`
 	Keywords        string     `json:"keywords"`
@@ -31,24 +32,24 @@ type QueryArticleReq struct {
 }
 
 type ArticleResponse struct {
-	ID              int           `json:"id"`
-	CreatedAt       *time.Time    `json:"created_at,omitempty"`
-	ModifiedAt      *time.Time    `json:"modified_at,omitempty"`
-	Category        Category      `json:"category"`
-	Title           string        `json:"title"`
-	Desc            string        `json:"desc"`
-	Keywords        string        `json:"keywords"`
-	Content         string        `json:"content"`
-	RenderedContent string        `json:"rendered_content"`
-	Tags            []TagResponse `json:"tags"`
-	PublishedAt     *time.Time    `json:"published_at"`
-	Source          int           `json:"source"`
-	ReproduceURL    string        `json:"reproduce_url"`
-	Thumb           string        `json:"thumb"`
-	LikesNum        int           `json:"like_num"`
-	PvsNm           int           `json:"pvs_num"`
-	CommentNum      int           `json:"comments_num"`
-	State           int           `json:"state"`
+	ID              int              `json:"id"`
+	CreatedAt       *time.Time       `json:"created_at,omitempty"`
+	ModifiedAt      *time.Time       `json:"modified_at,omitempty"`
+	Category        CategoryResponse `json:"category"`
+	Title           string           `json:"title"`
+	Desc            string           `json:"desc"`
+	Keywords        string           `json:"keywords"`
+	Content         string           `json:"content"`
+	RenderedContent string           `json:"rendered_content"`
+	Tags            []TagResponse    `json:"tags"`
+	PublishedAt     *time.Time       `json:"published_at"`
+	Source          int              `json:"source"`
+	ReproduceURL    string           `json:"reproduce_url"`
+	Thumb           string           `json:"thumb"`
+	LikesNum        int              `json:"like_num,omitempty"`
+	PvsNm           int              `json:"pvs_num,omitempty"`
+	CommentNum      int              `json:"comments_num,omitempty"`
+	State           int              `json:"state"`
 }
 
 type ArticlesSerializer struct {
@@ -58,7 +59,6 @@ type ArticlesSerializer struct {
 func (a *Article) Response() ArticleResponse {
 	article := ArticleResponse{
 		ID:              a.ID,
-		Category:        a.Category,
 		Title:           a.Title,
 		Desc:            a.Desc,
 		Keywords:        a.Keywords,
@@ -76,7 +76,8 @@ func (a *Article) Response() ArticleResponse {
 		State:           a.State,
 	}
 	serializer := TagsSerializer{Tags: a.Tags}
-	article.Tags = serializer.Response()
+	article.Tags = serializer.PreviewResponse()
+	article.Category = a.Category.PreviewResponse()
 
 	return article
 }
@@ -84,7 +85,6 @@ func (a *Article) Response() ArticleResponse {
 func (a *Article) PreviewResponse() ArticleResponse {
 	article := ArticleResponse{
 		ID:         a.ID,
-		Category:   a.Category,
 		Title:      a.Title,
 		Desc:       a.Desc,
 		Keywords:   a.Keywords,
@@ -97,23 +97,26 @@ func (a *Article) PreviewResponse() ArticleResponse {
 	}
 	serializer := TagsSerializer{Tags: a.Tags}
 	article.Tags = serializer.PreviewResponse()
+	article.Category = a.Category.PreviewResponse()
 
 	return article
 }
 
 func (a *Article) EditResponse() ArticleResponse {
 	article := ArticleResponse{
-		ID:        a.ID,
-		Category:  a.Category,
-		Title:     a.Title,
-		Desc:      a.Desc,
-		Keywords:  a.Keywords,
-		CreatedAt: a.CreatedAt,
-		Source:    a.Source,
-		Thumb:     a.Thumb,
+		ID:              a.ID,
+		Title:           a.Title,
+		Desc:            a.Desc,
+		Content:         a.Content,
+		RenderedContent: a.RenderedContent,
+		Keywords:        a.Keywords,
+		CreatedAt:       a.CreatedAt,
+		Source:          a.Source,
+		Thumb:           a.Thumb,
 	}
 	serializer := TagsSerializer{Tags: a.Tags}
 	article.Tags = serializer.PreviewResponse()
+	article.Category = a.Category.PreviewResponse()
 
 	return article
 }

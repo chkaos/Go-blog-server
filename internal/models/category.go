@@ -27,22 +27,22 @@ type CategorysSerializer struct {
 	Categorys []Category
 }
 
-func (t *Category) Response() CategoryResponse {
+func (c *Category) Response() CategoryResponse {
 	Category := CategoryResponse{
-		ID:         t.ID,
-		CreatedAt:  t.CreatedAt,
-		ModifiedAt: t.ModifiedAt,
-		Name:       t.Name,
-		Desc:       t.Desc,
-		ArticleNum: len(t.Articles),
+		ID:         c.ID,
+		CreatedAt:  c.CreatedAt,
+		ModifiedAt: c.ModifiedAt,
+		Name:       c.Name,
+		Desc:       c.Desc,
+		ArticleNum: len(c.Articles),
 	}
 	return Category
 }
 
-func (t *Category) PreviewResponse() CategoryResponse {
+func (c *Category) PreviewResponse() CategoryResponse {
 	Category := CategoryResponse{
-		ID:   t.ID,
-		Name: t.Name,
+		ID:   c.ID,
+		Name: c.Name,
 	}
 	return Category
 }

@@ -20,12 +20,12 @@ func NewTagDAO() *TagDAO {
 
 // AddTag  add new tag
 func (d *TagDAO) AddTag(tag models.Tag) error {
-	return d.db().Create(tag).Error
+	return d.db().Create(&tag).Error
 }
 
 // UpdateTag  update tag
 func (d *TagDAO) UpdateTag(tag models.Tag) error {
-	return d.db().Model(&models.Tag{}).Update(tag).Error
+	return d.db().Model(&tag).Update(&tag).Error
 }
 
 // Querytags  query all tags

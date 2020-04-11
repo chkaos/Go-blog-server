@@ -7,7 +7,7 @@ type Tag struct {
 
 	Name     string    `json:"name"`
 	Desc     string    `json:"desc"`
-	Icon     string    `json:"icon"`
+	Slug     string    `json:"slug"`
 	Articles []Article `gorm:"many2many:tag_relation;association_jointable_foreignkey:article_id;jointable_foreignkey:tag_id"`
 }
 
@@ -30,8 +30,8 @@ type TagResponse struct {
 	ModifiedAt *time.Time `json:"modified_at,omitempty"`
 	Name       string     `json:"name"`
 	Desc       string     `json:"desc,omitempty"`
-	Icon       string     `json:"icon"`
-	ArticleNum int        `json:"article_num" default:"0"`
+	Slug       string     `json:"slug,omitempty"`
+	ArticleNum int        `json:"article_num,omitempty"`
 }
 
 type TagsSerializer struct {
@@ -45,7 +45,7 @@ func (t *Tag) Response() TagResponse {
 		ModifiedAt: t.ModifiedAt,
 		Name:       t.Name,
 		Desc:       t.Desc,
-		Icon:       t.Icon,
+		Slug:       t.Slug,
 		ArticleNum: len(t.Articles),
 	}
 	return tag
@@ -55,7 +55,7 @@ func (t *Tag) PreviewResponse() TagResponse {
 	tag := TagResponse{
 		ID:   t.ID,
 		Name: t.Name,
-		Icon: t.Icon,
+		Slug: t.Slug,
 	}
 	return tag
 }
