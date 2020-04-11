@@ -14,6 +14,7 @@ require (
 	github.com/go-ini/ini v1.49.0
 	github.com/gomodule/redigo v2.0.1-0.20180401191855-9352ab68be13+incompatible
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
+	github.com/guregu/null v3.4.0+incompatible // indirect
 	github.com/jinzhu/gorm v1.9.11
 	github.com/jinzhu/now v1.1.1 // indirect
 	github.com/json-iterator/go v1.1.7 // indirect

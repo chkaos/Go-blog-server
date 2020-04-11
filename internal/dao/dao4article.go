@@ -17,16 +17,22 @@ func NewArticleDAO() *ArticleDAO {
 
 // AddArticle add new Article
 func (a *ArticleDAO) AddArticle(article models.Article) error {
+
+	article.HandlePublishedAt()
 	return a.db().Create(&article).Error
 }
 
 // UpdateArticle update Article
 func (a *ArticleDAO) UpdateArticle(article models.Article) error {
+
+	article.HandlePublishedAt()
+
 	db := a.db()
 	tx := db.Begin()
 	tx.Model(&article).Update(&article)
 	tx.Model(&article).Association("Tag").Replace(article.Tags)
 	err := tx.Commit().Error
+
 	return err
 }
 

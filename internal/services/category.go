@@ -73,7 +73,6 @@ func (s *CategoryService) AddCategory(Category models.Category) (resp common.Res
 		resp.Err = common.ErrorAddCategoryFail
 	} else {
 		resp.Err = common.SUCCESS
-		resp.Data = Category.PreviewResponse()
 	}
 
 	return

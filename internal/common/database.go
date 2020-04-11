@@ -88,7 +88,6 @@ func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
 	nowTime := time.Now().Unix()
 	tm := time.Unix(nowTime, 0).Format(setting.TimeFormat)
-	fmt.Println(tm)
 	if _, ok := scope.Get("gorm:update_column"); !ok {
 		scope.SetColumn("ModifiedAt", tm)
 	}

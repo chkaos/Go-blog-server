@@ -14,9 +14,9 @@ import (
 	"Go-blog-server/pkg/setting"
 )
 
-// @title Swagger Astella API
+// @title Swagger Chkaos API
 // @version 1.0
-// @description This is a sample server celler server.
+// @description Api for chkaos.
 
 func main() {
 	router := routers.InitRouter()

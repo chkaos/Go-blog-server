@@ -38,8 +38,6 @@ func BindAndValid(c *gin.Context, form interface{}) (httpcode int, Err common.Er
 func BindID(c *gin.Context) (httpcode int, Err common.Err, id int) {
 	id, err := strconv.Atoi(c.Param("id"))
 
-	fmt.Println(id, err)
-
 	httpcode = http.StatusOK
 	Err = common.SUCCESS
 
@@ -53,7 +51,7 @@ func BindID(c *gin.Context) (httpcode int, Err common.Err, id int) {
 
 func MarkErrors(errors []*validation.Error) {
 	for _, err := range errors {
-		fmt.Println(err)
+		fmt.Println(err.Key, err.Message)
 		logging.Info(err.Key, err.Message)
 	}
 

@@ -6,42 +6,41 @@ import (
 )
 
 type AddArticleForm struct {
-	CategoryID   int    `form:"category_id" valid:"Required;Min(1)"`
+	CategoryID   int    `json:"category_id" form:"category_id" valid:"Required;Min(1)"`
 	Title        string `form:"title" valid:"Required;MaxSize(100)"`
 	Desc         string `form:"desc" valid:"Required;MaxSize(100)"`
 	Keywords     string `form:"keywords" valid:"MaxSize(100)"`
-	Content      string `form:"content" valid:"Required;MinSize(1)"`
+	Content      string `form:"content" valid:"Required"`
 	Source       int    `form:"source" valid:"Required;Range(0,3)"`
-	ReproduceURL string `form:"reproduce_url" valid:"MaxSize(100)"`
-	Thumb        string `form:"thumb" valid:"Required;MinSize(1)"`
-	State        int    `form:"state" valid:"Required;Range(0,1)"`
+	ReproduceURL string `json:"reproduce_url" form:"reproduce_url" valid:"MaxSize(100)"`
+	Thumb        string `form:"thumb" valid:"Required"`
+	State        int    `form:"state" valid:"Range(0,1)"`
 	Tags         []int  `form:"tags" valid:"Required"`
 }
 
 type EditArticleForm struct {
 	ID           int    `form:"id" valid:"Required;Min(1)"`
-	CategoryID   int    `form:"category_id" valid:"Required;Min(1)"`
+	CategoryID   int    `json:"category_id" form:"category_id" valid:"Required;Min(1)"`
 	Title        string `form:"title" valid:"Required;MaxSize(100)"`
 	Desc         string `form:"desc" valid:"Required;MaxSize(100)"`
 	Keywords     string `form:"keywords" valid:"MaxSize(100)"`
 	Content      string `form:"content" valid:"Required;MinSize(1)"`
 	Source       int    `form:"source" valid:"Required;Range(0,3)"`
-	ReproduceURL string `form:"reproduce_url" valid:"MaxSize(100)""`
+	ReproduceURL string `json:"reproduce_url" form:"reproduce_url" valid:"MaxSize(100)"`
 	Thumb        string `form:"thumb" valid:"Required;MinSize(1)"`
 	Tags         []int  `form:"tags" valid:"Required"`
-	State        int    `form:"state" valid:"Required;Range(0,1)"`
+	State        int    `form:"state" valid:"Range(0,1)"`
 }
 
 func (a *AddArticleForm) Transform() (articleModel models.Article, err error) {
 	var (
-		categoryModel models.Category
-		tagModels     []models.Tag
+		tagModels []models.Tag
 	)
 
-	categoryDao := dao.NewCategoryDAO()
 	tagDao := dao.NewTagDAO()
 
 	articleModel = models.Article{
+		CategoryID:   a.CategoryID,
 		Title:        a.Title,
 		Desc:         a.Desc,
 		Keywords:     a.Keywords,
@@ -51,12 +50,6 @@ func (a *AddArticleForm) Transform() (articleModel models.Article, err error) {
 		Thumb:        a.Thumb,
 		State:        a.State,
 	}
-
-	if categoryModel, err = categoryDao.QueryCategoryByID(a.CategoryID); err != nil {
-		return
-	}
-
-	articleModel.Category = categoryModel
 
 	if tagModels, err = tagDao.SetTags(a.Tags); err != nil {
 		return
@@ -69,14 +62,13 @@ func (a *AddArticleForm) Transform() (articleModel models.Article, err error) {
 
 func (e *EditArticleForm) Transform() (articleModel models.Article, err error) {
 	var (
-		categoryModel models.Category
-		tagModels     []models.Tag
+		tagModels []models.Tag
 	)
 
-	categoryDao := dao.NewCategoryDAO()
 	tagDao := dao.NewTagDAO()
 
 	articleModel = models.Article{
+		CategoryID:   e.CategoryID,
 		Title:        e.Title,
 		Desc:         e.Desc,
 		Keywords:     e.Keywords,
@@ -87,12 +79,6 @@ func (e *EditArticleForm) Transform() (articleModel models.Article, err error) {
 		State:        e.State,
 	}
 	articleModel.ID = e.ID
-
-	if categoryModel, err = categoryDao.QueryCategoryByID(e.CategoryID); err != nil {
-		return
-	}
-
-	articleModel.Category = categoryModel
 
 	if tagModels, err = tagDao.SetTags(e.Tags); err != nil {
 		return

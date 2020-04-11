@@ -57,7 +57,6 @@ func (as *ArticleService) AddArticle(Article models.Article) (resp common.Respon
 		resp.Err = common.ErrorAddArticleFail
 	} else {
 		resp.Err = common.SUCCESS
-		resp.Data = Article.Response()
 	}
 
 	return

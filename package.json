@@ -1,7 +1,7 @@
 {
   "name": "go-blog-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "gin-blog-server for chkaos.me",
   "main": "index.js",
   "scripts": {
     "dev": "go run ./cmd/main.go",

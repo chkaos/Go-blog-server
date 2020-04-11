@@ -73,7 +73,6 @@ func (s *TagService) AddTag(tag models.Tag) (resp common.Response, err error) {
 		resp.Err = common.ErrorAddTagFail
 	} else {
 		resp.Err = common.SUCCESS
-		resp.Data = tag.PreviewResponse()
 	}
 
 	return

@@ -7,22 +7,22 @@ import (
 type Article struct {
 	Model
 
-	CategoryID      int        `json:"category" gorm:"-"`
-	Category        Category   `json:"category" gorm:"-"`
-	Title           string     `json:"title"`
-	Desc            string     `json:"desc"`
-	Keywords        string     `json:"keywords"`
-	Content         string     `json:"content"`
-	RenderedContent string     `json:"rendered_content"`
-	Tags            []Tag      `gorm:"many2many:tag_relation;association_jointable_foreignkey:tag_id;jointable_foreignkey:article_id"`
-	PublishedAt     *time.Time `json:"published_at"`
-	Source          int        `json:"source"`
-	ReproduceURL    string     `json:"reproduce_url"`
-	Thumb           string     `json:"thumb"`
-	LikesNum        int        `json:"like_num" gorm:"-"`
-	PvsNm           int        `json:"pvs_num" gorm:"-"`
-	CommentNum      int        `json:"comments_num" gorm:"-"`
-	State           int        `json:"state"`
+	CategoryID      int       `json:"category_id"`
+	Category        Category  `json:"category" gorm:"-"`
+	Title           string    `json:"title"`
+	Desc            string    `json:"desc"`
+	Keywords        string    `json:"keywords"`
+	Content         string    `json:"content"`
+	RenderedContent string    `json:"rendered_content"`
+	Tags            []Tag     `gorm:"many2many:tag_relation;association_jointable_foreignkey:tag_id;jointable_foreignkey:article_id"`
+	PublishedAt     time.Time `json:"published_at"`
+	Source          int       `json:"source"`
+	ReproduceURL    string    `json:"reproduce_url"`
+	Thumb           string    `json:"thumb"`
+	LikesNum        int       `json:"like_num" gorm:"-"`
+	PvsNm           int       `json:"pvs_num" gorm:"-"`
+	CommentNum      int       `json:"comments_num" gorm:"-"`
+	State           int       `json:"state"`
 }
 
 type QueryArticleReq struct {
@@ -42,7 +42,7 @@ type ArticleResponse struct {
 	Content         string           `json:"content"`
 	RenderedContent string           `json:"rendered_content"`
 	Tags            []TagResponse    `json:"tags"`
-	PublishedAt     *time.Time       `json:"published_at"`
+	PublishedAt     time.Time        `json:"published_at"`
 	Source          int              `json:"source"`
 	ReproduceURL    string           `json:"reproduce_url"`
 	Thumb           string           `json:"thumb"`
@@ -54,6 +54,12 @@ type ArticleResponse struct {
 
 type ArticlesSerializer struct {
 	Articles []Article
+}
+
+func (a *Article) HandlePublishedAt() {
+	if a.State == 0 && a.PublishedAt.IsZero() {
+		a.PublishedAt = time.Now()
+	}
 }
 
 func (a *Article) Response() ArticleResponse {
