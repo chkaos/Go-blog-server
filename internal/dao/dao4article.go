@@ -74,7 +74,21 @@ func (a *ArticleDAO) DeleteArticle(id int) error {
 // QueryArticles query Articles by condition
 func (a *ArticleDAO) QueryArticles(req *models.QueryArticleReq) (articles []models.Article, total int, err error) {
 	db := a.db()
+
+	if req.Category > 0 {
+		db = db.Where("category_id = ?", req.Category)
+	}
+
+	if req.State >= 0 {
+		db = db.Where("state = ?", req.State)
+	}
+
+	if req.Source >= 0 {
+		db = db.Where("source = ?", req.Source)
+	}
+
 	db.Model(&articles).Count(&total)
+
 	if req.PageNum > 0 && req.PageSize > 0 {
 		db = db.Offset((req.PageNum - 1) * req.PageSize).Limit(req.PageSize)
 	}
@@ -86,15 +100,6 @@ func (a *ArticleDAO) QueryArticles(req *models.QueryArticleReq) (articles []mode
 		if tagModel.ID != 0 {
 			tx.Model(&tagModel).Related(&articles, "Articles")
 			total = tx.Model(&tagModel).Association("Articles").Count()
-		}
-	}
-
-	if req.Category > 0 {
-		var categoryModel models.Category
-		tx.Where("id = ?", req.Category).First(&categoryModel)
-		if categoryModel.ID != 0 {
-			tx.Model(&articles).Where("category_id = ?", categoryModel.ID)
-			total = tx.Model(&categoryModel).Association("Articles").Count()
 		}
 	}
 

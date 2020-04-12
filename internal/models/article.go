@@ -28,6 +28,8 @@ type Article struct {
 type QueryArticleReq struct {
 	Tag      int `json:"tag"`
 	Category int `json:"category"`
+	State    int `json:"state"`
+	Source   int `json:"source"`
 	Pagination
 }
 
@@ -35,7 +37,8 @@ type ArticleResponse struct {
 	ID              int              `json:"id"`
 	CreatedAt       *time.Time       `json:"created_at,omitempty"`
 	ModifiedAt      *time.Time       `json:"modified_at,omitempty"`
-	Category        CategoryResponse `json:"category"`
+	CategoryID      int              `json:"category_id,omitempty"`
+	Category        CategoryResponse `json:"category,omitempty"`
 	Title           string           `json:"title"`
 	Desc            string           `json:"desc"`
 	Keywords        string           `json:"keywords"`
@@ -112,17 +115,20 @@ func (a *Article) EditResponse() ArticleResponse {
 	article := ArticleResponse{
 		ID:              a.ID,
 		Title:           a.Title,
+		CategoryID:      a.CategoryID,
 		Desc:            a.Desc,
 		Content:         a.Content,
 		RenderedContent: a.RenderedContent,
 		Keywords:        a.Keywords,
 		CreatedAt:       a.CreatedAt,
+		ModifiedAt:      a.ModifiedAt,
+		PublishedAt:     a.PublishedAt,
+		ReproduceURL:    a.ReproduceURL,
 		Source:          a.Source,
 		Thumb:           a.Thumb,
 	}
 	serializer := TagsSerializer{Tags: a.Tags}
 	article.Tags = serializer.PreviewResponse()
-	article.Category = a.Category.PreviewResponse()
 
 	return article
 }

@@ -11,7 +11,7 @@ type AddArticleForm struct {
 	Desc         string `form:"desc" valid:"Required;MaxSize(100)"`
 	Keywords     string `form:"keywords" valid:"MaxSize(100)"`
 	Content      string `form:"content" valid:"Required"`
-	Source       int    `form:"source" valid:"Required;Range(0,3)"`
+	Source       int    `form:"source" valid:"Range(0,3)"`
 	ReproduceURL string `json:"reproduce_url" form:"reproduce_url" valid:"MaxSize(100)"`
 	Thumb        string `form:"thumb" valid:"Required"`
 	State        int    `form:"state" valid:"Range(0,1)"`
@@ -24,12 +24,12 @@ type EditArticleForm struct {
 	Title        string `form:"title" valid:"Required;MaxSize(100)"`
 	Desc         string `form:"desc" valid:"Required;MaxSize(100)"`
 	Keywords     string `form:"keywords" valid:"MaxSize(100)"`
-	Content      string `form:"content" valid:"Required;MinSize(1)"`
-	Source       int    `form:"source" valid:"Required;Range(0,3)"`
+	Content      string `form:"content" valid:"Required"`
+	Source       int    `form:"source" valid:"Range(0,3)"`
 	ReproduceURL string `json:"reproduce_url" form:"reproduce_url" valid:"MaxSize(100)"`
-	Thumb        string `form:"thumb" valid:"Required;MinSize(1)"`
-	Tags         []int  `form:"tags" valid:"Required"`
+	Thumb        string `form:"thumb" valid:"Required"`
 	State        int    `form:"state" valid:"Range(0,1)"`
+	Tags         []int  `form:"tags" valid:"Required"`
 }
 
 func (a *AddArticleForm) Transform() (articleModel models.Article, err error) {

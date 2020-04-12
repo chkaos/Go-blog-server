@@ -50,6 +50,8 @@ func (ac *ArticleController) GetArticle(c *gin.Context) {
 // @Param pageNum query int true "PageNum"
 // @Param tag query string "Tags"
 // @Param category query int "Category"
+// @Param state query int "Category"
+// @Param source query int "Category"
 // @Success 200 {object} common.Response
 // @Failure 500 {object} common.Response
 // @Router /api/admin/articles [get]
