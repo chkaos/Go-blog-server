@@ -8,7 +8,7 @@ type Tag struct {
 	Name     string    `json:"name"`
 	Desc     string    `json:"desc"`
 	Slug     string    `json:"slug"`
-	Articles []Article `gorm:"many2many:tag_relation;association_jointable_foreignkey:article_id;jointable_foreignkey:tag_id"`
+	Articles []Article `gorm:"many2many:tag_relation"`
 }
 
 type TagRelation struct {

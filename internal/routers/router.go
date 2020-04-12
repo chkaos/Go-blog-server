@@ -53,6 +53,7 @@ func InitRouter() *gin.Engine {
 		apiAdmin.GET("/article", ac.GetArticles)
 		apiAdmin.POST("/article", ac.AddArticle)
 		apiAdmin.PUT("/article", ac.UpdateArticle)
+		apiAdmin.PUT("/article/state", ac.UpdateState)
 		apiAdmin.DELETE("/article/:id", ac.DeleteArticle)
 	}
 

@@ -62,6 +62,7 @@ func (as *ArticleService) AddArticle(Article models.Article) (resp common.Respon
 	return
 }
 
+// UpdateArticle
 func (as *ArticleService) UpdateArticle(Article models.Article) (resp common.Response, err error) {
 
 	var (
@@ -83,6 +84,19 @@ func (as *ArticleService) UpdateArticle(Article models.Article) (resp common.Res
 	return
 }
 
+// UpdateArticle
+func (as *ArticleService) UpdateArticleState(id, state int) (resp common.Response, err error) {
+
+	if err = as.dao.UpdateArticleState(id, state); err != nil {
+		resp.Err = common.ErrorUpdateArticleFail
+	} else {
+		resp.Err = common.SUCCESS
+	}
+
+	return
+}
+
+// GetArticle
 func (as *ArticleService) GetArticle(id int) (resp common.Response, err error) {
 
 	var (
@@ -101,6 +115,7 @@ func (as *ArticleService) GetArticle(id int) (resp common.Response, err error) {
 	return
 }
 
+// DeleteArticle
 func (as *ArticleService) DeleteArticle(id int) (resp common.Response, err error) {
 
 	var (

@@ -36,6 +36,11 @@ func (a *ArticleDAO) UpdateArticle(article models.Article) error {
 	return err
 }
 
+// UpdateArticleState update Article State Only
+func (a *ArticleDAO) UpdateArticleState(id, state int) error {
+	return a.db().Model(&models.Article{}).Where("id = ?", id).Update("state", state).Error
+}
+
 // QueryArticle query Article by Article title
 func (a *ArticleDAO) QueryArticleByTitle(title string) (article models.Article, err error) {
 	article, err = a.FindOneArticle("title = ?", title)
@@ -73,7 +78,7 @@ func (a *ArticleDAO) DeleteArticle(id int) error {
 
 // QueryArticles query Articles by condition
 func (a *ArticleDAO) QueryArticles(req *models.QueryArticleReq) (articles []models.Article, total int, err error) {
-	db := a.db()
+	db := a.db().Preload("Category").Order("created_at desc")
 
 	if req.Category > 0 {
 		db = db.Where("category_id = ?", req.Category)
@@ -101,11 +106,14 @@ func (a *ArticleDAO) QueryArticles(req *models.QueryArticleReq) (articles []mode
 			tx.Model(&tagModel).Related(&articles, "Articles")
 			total = tx.Model(&tagModel).Association("Articles").Count()
 		}
+	} else {
+		db.Find(&articles)
 	}
 
 	for i, _ := range articles {
 		tx.Model(&articles[i]).Related(&articles[i].Tags, "Tags")
 	}
 	err = tx.Commit().Error
+
 	return articles, total, err
 }

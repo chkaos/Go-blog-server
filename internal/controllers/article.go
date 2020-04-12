@@ -146,6 +146,34 @@ func (ac *ArticleController) UpdateArticle(c *gin.Context) {
 	common.WriteResponseSuccess(c, resp)
 }
 
+// @Summary 更新文章状态
+// @Produce  json
+// @Param id body int true "ID"
+// @Param state body int true "State"
+// @Success 200 {object} common.Response
+// @Failure 500 {object} common.Response
+// @Router /api/admin/article [put]
+func (ac *ArticleController) UpdateState(c *gin.Context) {
+
+	var form struct {
+		ID    int `form:"id" valid:"Required;Min(1)"`
+		State int `form:"state" valid:"Range(0,1)"`
+	}
+
+	if httpCode, Err := validators.BindAndValid(c, &form); httpCode != e.SUCCESS {
+		common.WriteResponse(c, httpCode, common.Response{Err: Err})
+		return
+	}
+
+	resp, err := ac.service.UpdateArticleState(form.ID, form.State)
+	if err != nil {
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorUpdateArticleFail})
+		return
+	}
+
+	common.WriteResponseSuccess(c, resp)
+}
+
 // @Summary 删除文章
 // @Produce  json
 // @Param id path int true "ID"

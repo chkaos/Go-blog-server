@@ -8,7 +8,7 @@ type Article struct {
 	Model
 
 	CategoryID      int       `json:"category_id"`
-	Category        Category  `json:"category" gorm:"-"`
+	Category        Category  `json:"category" gorm:"foreignkey:CategoryID"`
 	Title           string    `json:"title"`
 	Desc            string    `json:"desc"`
 	Keywords        string    `json:"keywords"`
