@@ -1,8 +1,6 @@
 package dao
 
 import (
-	_ "fmt"
-
 	"Go-blog-server/internal/models"
 )
 
@@ -78,7 +76,7 @@ func (a *ArticleDAO) DeleteArticle(id int) error {
 
 // QueryArticles query Articles by condition
 func (a *ArticleDAO) QueryArticles(req *models.QueryArticleReq) (articles []models.Article, total int, err error) {
-	db := a.db().Preload("Category").Order("created_at desc")
+	db := a.db()
 
 	if req.Category > 0 {
 		db = db.Where("category_id = ?", req.Category)
@@ -94,23 +92,20 @@ func (a *ArticleDAO) QueryArticles(req *models.QueryArticleReq) (articles []mode
 
 	db.Model(&articles).Count(&total)
 
-	if req.PageNum > 0 && req.PageSize > 0 {
-		db = db.Offset((req.PageNum - 1) * req.PageSize).Limit(req.PageSize)
-	}
-
-	tx := db.Begin()
+	tx := db.Order("created_at desc").Begin()
 	if req.Tag > 0 {
 		var tagModel models.Tag
 		tx.Where("id = ?", req.Tag).First(&tagModel)
 		if tagModel.ID != 0 {
-			tx.Model(&tagModel).Related(&articles, "Articles")
+			tx.Model(&tagModel).Offset((req.PageNum-1)*req.PageSize).Limit(req.PageSize).Related(&articles, "Articles")
 			total = tx.Model(&tagModel).Association("Articles").Count()
 		}
 	} else {
-		db.Find(&articles)
+		tx.Offset((req.PageNum - 1) * req.PageSize).Limit(req.PageSize).Find(&articles)
 	}
 
 	for i, _ := range articles {
+		tx.Model(&articles[i]).Related(&articles[i].Category, "Category")
 		tx.Model(&articles[i]).Related(&articles[i].Tags, "Tags")
 	}
 	err = tx.Commit().Error
