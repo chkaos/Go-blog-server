@@ -19,9 +19,9 @@ type Article struct {
 	Source          int       `json:"source"`
 	ReproduceURL    string    `json:"reproduce_url"`
 	Thumb           string    `json:"thumb"`
-	LikesNum        int       `json:"like_num" gorm:"-"`
-	PvsNm           int       `json:"pvs_num" gorm:"-"`
-	CommentNum      int       `json:"comments_num" gorm:"-"`
+	LikesNum        int       `json:"like_num"`
+	PvsNm           int       `json:"pvs_num"`
+	CommentNum      int       `json:"comment_num"`
 	State           int       `json:"state"`
 }
 
@@ -42,8 +42,8 @@ type ArticleResponse struct {
 	Title           string           `json:"title"`
 	Desc            string           `json:"desc"`
 	Keywords        string           `json:"keywords"`
-	Content         string           `json:"content"`
-	RenderedContent string           `json:"rendered_content"`
+	Content         string           `json:"content,omitempty"`
+	RenderedContent string           `json:"rendered_content,omitempty"`
 	Tags            []TagResponse    `json:"tags"`
 	PublishedAt     time.Time        `json:"published_at"`
 	Source          int              `json:"source"`
@@ -51,7 +51,7 @@ type ArticleResponse struct {
 	Thumb           string           `json:"thumb"`
 	LikesNum        int              `json:"like_num,omitempty"`
 	PvsNm           int              `json:"pvs_num,omitempty"`
-	CommentNum      int              `json:"comments_num,omitempty"`
+	CommentNum      int              `json:"comment_num,omitempty"`
 	State           int              `json:"state"`
 }
 
@@ -100,6 +100,7 @@ func (a *Article) PreviewResponse() ArticleResponse {
 		CreatedAt:  a.CreatedAt,
 		Source:     a.Source,
 		Thumb:      a.Thumb,
+		State:      a.State,
 		LikesNum:   a.LikesNum,
 		PvsNm:      a.PvsNm,
 		CommentNum: a.CommentNum,
@@ -126,9 +127,13 @@ func (a *Article) EditResponse() ArticleResponse {
 		ReproduceURL:    a.ReproduceURL,
 		Source:          a.Source,
 		Thumb:           a.Thumb,
+		LikesNum:        a.LikesNum,
+		PvsNm:           a.PvsNm,
+		CommentNum:      a.CommentNum,
 	}
 	serializer := TagsSerializer{Tags: a.Tags}
 	article.Tags = serializer.PreviewResponse()
+	article.Category = a.Category.PreviewResponse()
 
 	return article
 }

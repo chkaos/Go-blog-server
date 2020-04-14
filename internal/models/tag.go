@@ -55,6 +55,7 @@ func (t *Tag) PreviewResponse() TagResponse {
 	tag := TagResponse{
 		ID:   t.ID,
 		Name: t.Name,
+		Desc: t.Desc,
 		Slug: t.Slug,
 	}
 	return tag

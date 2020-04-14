@@ -27,8 +27,16 @@ func (a *ArticleDAO) UpdateArticle(article models.Article) error {
 
 	db := a.db()
 	tx := db.Begin()
-	tx.Model(&article).Update(&article)
-	tx.Model(&article).Association("Tag").Replace(article.Tags)
+	if tx.Model(&article).Update(&article); tx.Error != nil {
+		tx.Rollback()
+		return tx.Error
+	}
+
+	if tx.Model(&article).Association("Tag").Replace(article.Tags); tx.Error != nil {
+		tx.Rollback()
+		return tx.Error
+	}
+
 	err := tx.Commit().Error
 
 	return err
@@ -68,9 +76,18 @@ func (a *ArticleDAO) DeleteArticle(id int) error {
 
 	db := a.db()
 	tx := db.Begin()
-	tx.Where("id = ?", id).Delete(&model)
-	tx.Model(&model).Association("Tag").Clear()
+
+	if tx.Where("id = ?", id).Delete(&model); tx.Error != nil {
+		tx.Rollback()
+		return tx.Error
+	}
+
+	if tx.Exec("DELETE FROM tag_relation WHERE article_id = ?", id); tx.Error != nil {
+		tx.Rollback()
+		return tx.Error
+	}
 	err := tx.Commit().Error
+
 	return err
 }
 
