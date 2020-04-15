@@ -19,7 +19,7 @@ func InitRedis() error {
 		password, host, port string
 	)
 
-	sec, err := setting.Cfg.GetSection("redis")
+	sec, err := setting.EnvCfg.GetSection("redis")
 	if err != nil {
 		log.Fatal(2, "Fail to get section 'redis': %v", err)
 	}

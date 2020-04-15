@@ -1,6 +1,7 @@
 package setting
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -8,7 +9,8 @@ import (
 )
 
 var (
-	Cfg *ini.File
+	Cfg    *ini.File
+	EnvCfg *ini.File
 
 	RunMode string
 
@@ -17,7 +19,6 @@ var (
 	WriteTimeout time.Duration
 
 	TimeFormat string
-	PageSize   int
 	JwtSecret  string
 
 	EndPoint   string
@@ -26,16 +27,34 @@ var (
 )
 
 func init() {
-	var err error
-	Cfg, err = ini.Load("./conf/app.ini")
+	var (
+		envCfgPath string
+		err        error
+	)
+	Cfg, err = ini.Load("./conf/base.ini")
+
 	if err != nil {
-		log.Fatalf("Fail to parse 'conf/app.ini': %v", err)
+		log.Fatalf("Fail to parse 'conf/base.ini': %v", err)
 	}
 
 	LoadBase()
+
+	if RunMode == "debug" {
+		envCfgPath = "dev.ini"
+	} else {
+		envCfgPath = "prod.ini"
+	}
+
+	EnvCfg, err = ini.Load(fmt.Sprintf("./conf/%s", envCfgPath))
+
+	if err != nil {
+		log.Fatalf("Fail to parse 'conf/%s': %v", envCfgPath, err)
+	}
+
+	LoadOSS()
 	LoadServer()
 	LoadApp()
-	LoadOSS()
+
 }
 
 func LoadBase() {
@@ -61,7 +80,6 @@ func LoadApp() {
 
 	TimeFormat = sec.Key("TIME_FORMAT").MustString("")
 	JwtSecret = sec.Key("JWT_SECRET").MustString("!@)*#)!@U#@*!@!)")
-	PageSize = sec.Key("PAGE_SIZE").MustInt(10)
 }
 
 func LoadOSS() {

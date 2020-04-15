@@ -3,6 +3,7 @@ module Go-blog-server
 go 1.12
 
 require (
+	github.com/BurntSushi/toml v0.3.1
 	github.com/PuerkitoBio/purell v1.1.1-0.20180310210909-975f53781597 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/aliyun/aliyun-oss-go-sdk v2.0.7+incompatible
