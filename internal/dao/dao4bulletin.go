@@ -42,7 +42,7 @@ func (b *BulletinDAO) DeleteBulletin(id int) error {
 }
 
 func (b *BulletinDAO) QueryBulletins(req *models.QueryBulletinReq) (total int, bulletins []models.Bulletin, err error) {
-	db := b.db().Model(&models.Bulletin{}).Order("created_at desc")
+	db := b.db().Model(&models.Bulletin{}).Order("created_at desc").Order("top desc")
 
 	if req.Top >= 0 {
 		db = db.Where("top = ?", req.Top)
