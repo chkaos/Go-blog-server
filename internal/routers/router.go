@@ -27,6 +27,7 @@ func InitRouter() *gin.Engine {
 	uc := controllers.NewUserController()
 	tc := controllers.NewTagController()
 	cc := controllers.NewCategoryController()
+	bc := controllers.NewBulletinController()
 	fc := controllers.NewFileController()
 	ac := controllers.NewArticleController()
 
@@ -49,6 +50,11 @@ func InitRouter() *gin.Engine {
 		apiAdmin.PUT("/category", cc.UpdateCategory)
 		apiAdmin.DELETE("/category/:id", cc.DeleteCategory)
 
+		apiAdmin.GET("/bulletin", bc.GetBulletins)
+		apiAdmin.POST("/bulletin", bc.AddBulletin)
+		apiAdmin.PUT("/bulletin", bc.UpdateBulletin)
+		apiAdmin.DELETE("/bulletin/:id", bc.DeleteBulletin)
+
 		apiAdmin.GET("/article/:id", ac.GetArticle)
 		apiAdmin.GET("/article", ac.GetArticles)
 		apiAdmin.POST("/article", ac.AddArticle)
@@ -60,8 +66,11 @@ func InitRouter() *gin.Engine {
 	apiv1 := r.Group("/api/v1")
 	{
 		apiv1.GET("/tags", tc.GetAllTags)
+
 		apiv1.GET("/article/:id", ac.GetArticle)
 		apiv1.GET("/article", ac.GetArticles)
+
+		apiv1.GET("/bulletin", bc.GetBulletins)
 	}
 
 	if setting.RunMode == "debug" {

@@ -41,6 +41,7 @@ func (s *CategoryService) QueryCategorysReq(req *models.QueryCategoryReq) (resp 
 	return
 }
 
+// QueryAllCategorys
 func (s *CategoryService) QueryAllCategorys() (resp common.Response, err error) {
 	var Categorys []models.Category
 
@@ -56,6 +57,7 @@ func (s *CategoryService) QueryAllCategorys() (resp common.Response, err error) 
 	return
 }
 
+// AddCategory
 func (s *CategoryService) AddCategory(Category models.Category) (resp common.Response, err error) {
 
 	var (
@@ -78,6 +80,7 @@ func (s *CategoryService) AddCategory(Category models.Category) (resp common.Res
 	return
 }
 
+// UpdateCategory
 func (s *CategoryService) UpdateCategory(Category models.Category) (resp common.Response, err error) {
 
 	var (
@@ -102,6 +105,7 @@ func (s *CategoryService) UpdateCategory(Category models.Category) (resp common.
 	return
 }
 
+// DeleteCategory
 func (s *CategoryService) DeleteCategory(id int) (resp common.Response, err error) {
 
 	var (
