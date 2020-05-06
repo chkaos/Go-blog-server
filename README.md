@@ -15,13 +15,18 @@
 
 **项目结构参考[golang-standards/project-layout](https://github.com/golang-standards/project-layout)； **
 
-## 安装依赖 windows
+## 根据操作系统进行golang环境配置并安装依赖 windows
 $env:GO111MODULE = "on"
 $env:GOPROXY = "https://goproxy.io"
-go mod vendor
+go mod
+
+## npm安装提交规范相关工具
+npm i
+npm run cz  // commit 规范
+
 ## 使用方法
 
- go run cmd/main.go
+go run cmd/main.go 或者 npm run dev
 
  todo
  项目结构优化
@@ -29,7 +34,6 @@ go mod vendor
  提取重复代码
  获取项目配置方法优化
 
- 项目参考
- https://segmentfault.com/a/1190000013297705
-
-swag init -g ./internal/routers/router.go
+## 参考项目
+[go-gin-example](https://github.com/eddycjy/go-gin-example)
+[golang-gin-realworld-example-app](https://github.com/gothinkster/golang-gin-realworld-example-app)
