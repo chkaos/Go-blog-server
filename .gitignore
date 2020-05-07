@@ -14,4 +14,8 @@ runtime
 # zip
 .zip
 
+<<<<<<< HEAD
 prod.ini
+=======
+package-lock.json
+>>>>>>> b634dab0ee61126d44a7494673da4a4f880fa367

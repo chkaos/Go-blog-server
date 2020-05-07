@@ -19,6 +19,17 @@ CREATE TABLE `category` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章分类管理';
 
+CREATE TABLE `bulletin` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `content` varchar(100) DEFAULT '' COMMENT '公告内容',
+  `source` varchar(20) DEFAULT '' COMMENT '出处或来源',
+  `top` tinyint(3) unsigned DEFAULT 0 COMMENT '状态 0为普通 1为置顶',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `deleted_at` timestamp DEFAULT null COMMENT '删除时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公告管理';
+
 CREATE TABLE `article` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `category_id` int(10) unsigned DEFAULT '0' COMMENT '分类ID',
@@ -107,3 +118,4 @@ INSERT INTO `article-tag-map` (`article_id`, `tag_id`) VALUES (1, 1), (1, 2);
 INSERT INTO `comment` (`uid`, `content`, `likes_num`, `state`) VALUES (1, '测试评论1', 3, 1), (1, '测试评论2', 0, 1), (1, '测试评论3', 0, 1);
 INSERT INTO `comment-parent-child` (`parent_id`, `child_id`) VALUES (1, 2), (1, 3);
 INSERT INTO `user` (`username`, `password`, `role`) VALUES ('admin', 'admin', 1);
+INSERT INTO `bulletin` (`content`, `source`) VALUES ('这是一条测试公告', '我说的');

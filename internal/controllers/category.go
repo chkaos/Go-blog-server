@@ -75,7 +75,7 @@ func (tc *CategoryController) AddCategory(c *gin.Context) {
 
 	resp, err := tc.service.AddCategory(category)
 	if err != nil {
-		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorAddTagFail})
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorAddCategoryFail})
 		return
 	}
 
@@ -105,7 +105,7 @@ func (tc *CategoryController) UpdateCategory(c *gin.Context) {
 	resp, err := tc.service.UpdateCategory(category)
 
 	if err != nil {
-		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorUpdateTagFail})
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorUpdateCategoryFail})
 		return
 	}
 
@@ -129,7 +129,7 @@ func (tc *CategoryController) DeleteCategory(c *gin.Context) {
 
 	resp, err := tc.service.DeleteCategory(id)
 	if err != nil {
-		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorDeleteTagFail})
+		common.WriteResponse(c, http.StatusInternalServerError, common.Response{Err: common.ErrorDeleteCategoryFail})
 		return
 	}
 

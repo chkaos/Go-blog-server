@@ -62,6 +62,13 @@ var (
 	ErrorArticleNotExist   = Err{Code: 10234, Msg: "文章不存在"}
 	ErrorUpdateArticleFail = Err{Code: 10235, Msg: "文章更新失败"}
 
+	ErrorAddBulletinSuccess = Err{Code: 0, Msg: "公告添加成功"}
+	ErrorAddBulletinFail    = Err{Code: 10310, Msg: "公告添加失败"}
+	ErrorGetBulletinFail    = Err{Code: 10312, Msg: "获取公告失败"}
+	ErrorDeleteBulletinFail = Err{Code: 10313, Msg: "删除公告失败"}
+	ErrorBulletinNotExist   = Err{Code: 10314, Msg: "公告不存在"}
+	ErrorUpdateBulletinFail = Err{Code: 10315, Msg: "公告更新失败"}
+
 	ErrAuth        = Err{Code: 10300, Msg: "用户名或密码错误"}
 	ErrorAuthToken = Err{Code: 10301, Msg: "tokn生成失败"}
 )
